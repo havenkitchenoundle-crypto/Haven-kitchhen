@@ -400,11 +400,10 @@
 
     <div class="buttons">
 
-      <a class="btn btn-gold"
-         href="https://wa.me/message/AFVSASXDFZ75G1"
-         target="_blank">
-         Book a Table
+      <a class="btn btn-gold" href="#booking">
+    Book a Table
       </a>
+  
 
       <a class="btn"
          href="#menu">
@@ -541,6 +540,77 @@
   </div>
 
 </section>
+  <section id="booking" style="padding:70px 8%; background:#0b100d;">
+  <div style="max-width:700px; margin:0 auto;">
+
+    <div style="text-align:center; color:#c99a45; letter-spacing:4px; font-size:12px; margin-bottom:12px;">
+      RESERVATIONS
+    </div>
+
+    <h2 style="text-align:center; font-family:Georgia,serif; font-size:42px; font-weight:normal; margin-bottom:30px;">
+      Book a Table
+    </h2>
+
+    <form id="bookingForm" onsubmit="sendBookingToWhatsApp(event)" style="display:grid; gap:16px;">
+
+      <input id="name" type="text" placeholder="Your Name" required
+        style="padding:14px; background:#111511; color:#f4eee2; border:1px solid #c99a45;">
+
+      <input id="phone" type="tel" placeholder="Phone Number" required
+        style="padding:14px; background:#111511; color:#f4eee2; border:1px solid #c99a45;">
+
+      <input id="date" type="date" required
+        style="padding:14px; background:#111511; color:#f4eee2; border:1px solid #c99a45;">
+
+      <input id="time" type="time" required
+        style="padding:14px; background:#111511; color:#f4eee2; border:1px solid #c99a45;">
+
+      <input id="guests" type="number" min="1" max="20" placeholder="Number of Guests" required
+        style="padding:14px; background:#111511; color:#f4eee2; border:1px solid #c99a45;">
+
+      <textarea id="notes" placeholder="Special Request (optional)" rows="4"
+        style="padding:14px; background:#111511; color:#f4eee2; border:1px solid #c99a45;"></textarea>
+
+      <button type="submit"
+        style="padding:16px; background:#c99a45; color:#111; border:none; font-weight:bold; letter-spacing:1.5px;">
+        SEND BOOKING REQUEST ON WHATSAPP
+      </button>
+
+    </form>
+
+  </div>
+</section>
+
+<script>
+function sendBookingToWhatsApp(event) {
+  event.preventDefault();
+
+  const name = document.getElementById('name').value;
+  const phone = document.getElementById('phone').value;
+  const date = document.getElementById('date').value;
+  const time = document.getElementById('time').value;
+  const guests = document.getElementById('guests').value;
+  const notes = document.getElementById('notes').value;
+
+  const message =
+`Hello Haven Kitchen,
+
+I would like to request a table reservation.
+
+Name: ${name}
+Phone: ${phone}
+Date: ${date}
+Time: ${time}
+Guests: ${guests}
+Special Request: ${notes || 'None'}`;
+
+  const whatsappUrl =
+    'https://wa.me/message/AFVSASXDFZ75G1?text=' +
+    encodeURIComponent(message);
+
+  window.open(whatsappUrl, '_blank');
+}
+</script>
 
 </main>
   
