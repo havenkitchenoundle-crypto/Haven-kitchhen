@@ -1,348 +1,489 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Haven Kitchen Turkish Restaurant | Oundle</title>
+<title>Haven Kitchen Turkish Restaurant | Oundle</title>
 
-  <meta name="description" content="Haven Kitchen Turkish Restaurant in Oundle, Peterborough. Opening soon.">
+<meta name="description" content="Haven Kitchen Turkish Restaurant in Oundle, Peterborough. Opening soon.">
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+<style>
 
-    html {
-      scroll-behavior: smooth;
-    }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-    body {
-      background: #090b09;
-      color: #f4eee2;
-      font-family: Arial, sans-serif;
-      line-height: 1.6;
-    }
+html {
+  scroll-behavior: smooth;
+}
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
+body {
+  background: #090b09;
+  color: #f4eee2;
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+}
 
-    header {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      z-index: 10;
-      padding: 22px 6%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid rgba(255,255,255,.12);
-      background: rgba(5,8,6,.35);
-    }
+a {
+  color: inherit;
+  text-decoration: none;
+}
 
-    .brand {
-      font-family: Georgia, serif;
-      letter-spacing: 3px;
-      font-size: 21px;
-    }
+/* HEADER */
 
-    .brand span {
-      color: #c99a45;
-    }
+header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 20;
+  padding: 22px 6%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255,255,255,.12);
+  background: rgba(5,8,6,.45);
+}
 
-    nav {
-      display: flex;
-      align-items: center;
-      gap: 22px;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-    }
+.brand {
+  font-family: Georgia, serif;
+  letter-spacing: 3px;
+  font-size: 21px;
+}
 
-    .reserve {
-      border: 1px solid #c99a45;
-      padding: 10px 15px;
-      color: #e5bd72;
-    }
+.brand span {
+  color: #c99a45;
+}
 
-    .hero {
-      min-height: 100vh;
-      position: relative;
-      display: flex;
-      align-items: center;
-      padding: 130px 8% 70px;
+nav {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
 
-      background:
-        linear-gradient(
-          90deg,
-          rgba(4,7,5,.97) 0%,
-          rgba(4,7,5,.84) 45%,
-          rgba(4,7,5,.48) 100%
-        ),
-        url("Screenshot_20260903_112211_Instagram.jpg")
-        center/cover no-repeat;
-    }
+.reserve {
+  border: 1px solid #c99a45;
+  padding: 10px 15px;
+  color: #e5bd72;
+}
 
-    .hero-content {
-    max-width: 690px;
-    margin: 0 auto;
+/* DROPDOWN MENU */
+
+.nav-menu {
+  position: relative;
+}
+
+.menu-toggle {
+  background: none;
+  border: none;
+  color: #f4eee2;
+  font: inherit;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  padding: 8px 0;
+}
+
+.menu-toggle::after {
+  content: " ▾";
+  color: #c99a45;
+}
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 220px;
+  padding: 8px 0;
+  background: #0c100d;
+  border: 1px solid rgba(201,154,69,.55);
+  box-shadow: 0 14px 30px rgba(0,0,0,.35);
+  display: none;
+  z-index: 50;
+}
+
+.dropdown a {
+  display: block;
+  padding: 12px 16px;
+  color: #f4eee2;
+  white-space: nowrap;
+  text-align: left;
+}
+
+.dropdown a:hover {
+  background: #171c17;
+  color: #e5bd72;
+}
+
+.nav-menu:hover .dropdown,
+.nav-menu.open .dropdown {
+  display: block;
+}
+
+/* HERO */
+
+.hero {
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 130px 8% 70px;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(4,7,5,.97) 0%,
+      rgba(4,7,5,.84) 45%,
+      rgba(4,7,5,.48) 100%
+    ),
+    url("Screenshot_20260903_112211_Instagram.jpg")
+    center/cover no-repeat;
+}
+
+.hero-content {
+  max-width: 690px;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo {
+  width: 175px;
+  height: 175px;
+  object-fit: cover;
+  object-position: center;
+  margin-bottom: 30px;
+  border-radius: 50%;
+  border: 2px solid #c99a45;
+  padding: 7px;
+  background: #f7f1e8;
+  box-shadow: 0 12px 35px rgba(0,0,0,.35);
+}
+
+.eyebrow {
+  color: #c99a45;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  margin-bottom: 18px;
+}
+
+.opening {
+  display: inline-block;
+  padding: 9px 15px;
+  margin-bottom: 25px;
+  border: 1px solid #c99a45;
+  color: #e8c37c;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  font-size: 12px;
+}
+
+h1 {
+  font-family: Georgia, serif;
+  font-weight: normal;
+  font-size: clamp(52px, 8vw, 96px);
+  line-height: .95;
+  letter-spacing: 2px;
+  margin-bottom: 22px;
+}
+
+h1 span {
+  color: #c99a45;
+}
+
+.subtitle {
+  font-family: Georgia, serif;
+  color: #e7dcc9;
+  font-size: 25px;
+  margin-bottom: 18px;
+}
+
+.hero-text {
+  max-width: 570px;
+  color: #cfc6b8;
+  font-size: 17px;
+  margin-bottom: 30px;
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 13px;
+  justify-content: center;
+}
+
+.btn {
+  display: inline-block;
+  padding: 14px 21px;
+  border: 1px solid #c99a45;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-size: 12px;
+}
+
+.btn-gold {
+  background: #c99a45;
+  color: #111;
+  font-weight: bold;
+}
+
+/* SECTIONS */
+
+section {
+  padding: 85px 8%;
+}
+
+.dark-section {
+  background: #101410;
+  text-align: center;
+}
+
+.section-title {
+  font-family: Georgia, serif;
+  font-weight: normal;
+  font-size: clamp(38px, 5vw, 58px);
+  margin-bottom: 18px;
+}
+
+.gold {
+  color: #c99a45;
+}
+
+.about-text {
+  max-width: 730px;
+  margin: 0 auto;
+  color: #c8c0b2;
+  font-size: 16px;
+}
+
+/* MENU SECTION */
+
+.menu {
+  background: #0a0d0b;
+  text-align: center;
+}
+
+.menu-grid {
+  max-width: 1050px;
+  margin: 35px auto 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+.menu-card {
+  display: block;
+  padding: 36px 20px;
+  border: 1px solid rgba(201,154,69,.4);
+  background: #111511;
+  transition: .2s ease;
+}
+
+.menu-card:hover {
+  transform: translateY(-3px);
+  border-color: #c99a45;
+  background: #151a15;
+}
+
+.menu-card h3 {
+  font-family: Georgia, serif;
+  font-weight: normal;
+  color: #d8aa55;
+  font-size: 30px;
+  letter-spacing: 1px;
+}
+
+.menu-card p {
+  color: #aaa294;
+  margin-top: 8px;
+}
+
+/* CONTACT */
+
+.contact {
+  background: #121612;
+}
+
+.contact-grid {
+  max-width: 1050px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 55px;
+}
+
+.contact p {
+  color: #d0c7b8;
+  margin: 11px 0;
+}
+
+.contact a {
+  color: #e0b360;
+}
+
+.contact-card {
+  padding: 35px;
+  border: 1px solid rgba(201,154,69,.35);
+  background: #0c100d;
+}
+
+.socials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 25px;
+}
+
+/* BOOKING */
+
+#booking {
+  background: #0a0d0b;
+}
+
+.booking-wrap {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.booking-title {
+  text-align: center;
+}
+
+.booking-form {
+  display: grid;
+  gap: 16px;
+}
+
+.booking-form input,
+.booking-form textarea {
+  width: 100%;
+  padding: 14px;
+  background: #111511;
+  color: #f4eee2;
+  border: 1px solid #c99a45;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+}
+
+.booking-form button {
+  padding: 16px;
+  background: #c99a45;
+  color: #111;
+  border: none;
+  font-weight: bold;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+}
+
+/* FOOTER */
+
+footer {
+  background: #050705;
+  text-align: center;
+  padding: 28px 15px;
+  color: #817b70;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+}
+
+/* MOBILE */
+
+@media (max-width: 760px) {
+
+  header {
+    position: relative;
+    display: block;
     text-align: center;
-    display: flex;
+    background: #090c0a;
+  }
+
+  nav {
+    justify-content: center;
+    gap: 12px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+    font-size: 10px;
+  }
+
+  .nav-menu {
+    position: relative;
+  }
+
+  .dropdown {
+    min-width: 210px;
+  }
+
+  .hero {
+    min-height: 88vh;
+    padding: 70px 7%;
+
+    background:
+      linear-gradient(
+        rgba(4,7,5,.67),
+        rgba(4,7,5,.94)
+      ),
+      url("Screenshot_20260903_112211_Instagram.jpg")
+      center/cover no-repeat;
+  }
+
+  .hero-content {
+    text-align: center;
+    margin: auto;
+  }
+
+  .logo {
+    width: 145px;
+    height: 145px;
+  }
+
+  h1 {
+    font-size: 51px;
+  }
+
+  .subtitle {
+    font-size: 21px;
+  }
+
+  .buttons {
     flex-direction: column;
-    align-items: center;
-    }
+    width: 100%;
+  }
 
-    .logo {
-    width: 175px;
-    height: 175px;
-    object-fit: cover;
-    object-position: center;
-    margin-bottom: 30px;
-    border-radius: 50%;
-    border: 2px solid #c99a45;
-    padding: 7px;
-    background: #f7f1e8;
-    box-shadow: 0 12px 35px rgba(0,0,0,0.35);
-    }
-    
+  .btn {
+    width: 100%;
+    text-align: center;
+  }
 
+  section {
+    padding: 65px 7%;
+  }
 
-    .eyebrow {
-      color: #c99a45;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 4px;
-      margin-bottom: 18px;
-    }
+  .menu-grid {
+    grid-template-columns: 1fr;
+  }
 
-    .opening {
-      display: inline-block;
-      padding: 9px 15px;
-      margin-bottom: 25px;
-      border: 1px solid #c99a45;
-      color: #e8c37c;
-      text-transform: uppercase;
-      letter-spacing: 4px;
-      font-size: 12px;
-    }
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+}
 
-    h1 {
-      font-family: Georgia, serif;
-      font-weight: normal;
-      font-size: clamp(52px, 8vw, 96px);
-      line-height: .95;
-      letter-spacing: 2px;
-      margin-bottom: 22px;
-    }
-
-    h1 span {
-      color: #c99a45;
-    }
-
-    .subtitle {
-      font-family: Georgia, serif;
-      color: #e7dcc9;
-      font-size: 25px;
-      margin-bottom: 18px;
-    }
-
-    .hero-text {
-      max-width: 570px;
-      color: #cfc6b8;
-      font-size: 17px;
-      margin-bottom: 30px;
-    }
-
-    .buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 13px;
-    }
-
-    .btn {
-      display: inline-block;
-      padding: 14px 21px;
-      border: 1px solid #c99a45;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      font-size: 12px;
-    }
-
-    .btn-gold {
-      background: #c99a45;
-      color: #111;
-      font-weight: bold;
-    }
-
-    section {
-      padding: 85px 8%;
-    }
-
-    .dark-section {
-      background: #101410;
-      text-align: center;
-    }
-
-    .section-title {
-      font-family: Georgia, serif;
-      font-weight: normal;
-      font-size: clamp(38px, 5vw, 58px);
-      margin-bottom: 18px;
-    }
-
-    .gold {
-      color: #c99a45;
-    }
-
-    .about-text {
-      max-width: 730px;
-      margin: 0 auto;
-      color: #c8c0b2;
-      font-size: 16px;
-    }
-
-    .menu {
-      background: #0a0d0b;
-      text-align: center;
-    }
-
-    .menu-box {
-      max-width: 650px;
-      margin: 35px auto 0;
-      padding: 55px 20px;
-      border: 1px solid rgba(201,154,69,.4);
-      background: #111511;
-    }
-
-    .menu-box h3 {
-      font-family: Georgia, serif;
-      font-weight: normal;
-      color: #d8aa55;
-      font-size: 42px;
-      letter-spacing: 2px;
-    }
-
-    .menu-box p {
-      color: #aaa294;
-      margin-top: 10px;
-    }
-
-    .contact {
-      background: #121612;
-    }
-
-    .contact-grid {
-      max-width: 1050px;
-      margin: auto;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 55px;
-    }
-
-    .contact p {
-      color: #d0c7b8;
-      margin: 11px 0;
-    }
-
-    .contact a {
-      color: #e0b360;
-    }
-
-    .contact-card {
-      padding: 35px;
-      border: 1px solid rgba(201,154,69,.35);
-      background: #0c100d;
-    }
-
-    .socials {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 25px;
-    }
-
-    footer {
-      background: #050705;
-      text-align: center;
-      padding: 28px 15px;
-      color: #817b70;
-      font-size: 11px;
-      letter-spacing: 1.5px;
-    }
-
-    @media (max-width: 760px) {
-
-      header {
-        position: relative;
-        display: block;
-        text-align: center;
-        background: #090c0a;
-      }
-
-      nav {
-        justify-content: center;
-        gap: 12px;
-        margin-top: 15px;
-        flex-wrap: wrap;
-        font-size: 10px;
-      }
-
-      .hero {
-        min-height: 88vh;
-        padding: 70px 7%;
-
-        background:
-          linear-gradient(
-            rgba(4,7,5,.67),
-            rgba(4,7,5,.94)
-          ),
-          url("https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?auto=format&fit=crop&w=1000&q=85")
-          center/cover no-repeat;
-      }
-
-      .hero-content {
-        text-align: center;
-        margin: auto;
-      }
-
-      .logo {
-        width: 145px;
-      }
-
-      h1 {
-        font-size: 51px;
-      }
-
-      .subtitle {
-        font-size: 21px;
-      }
-
-      .buttons {
-        flex-direction: column;
-      }
-
-      .btn {
-        width: 100%;
-        text-align: center;
-      }
-
-      section {
-        padding: 65px 7%;
-      }
-
-      .contact-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
+</style>
 </head>
 
+
 <body>
+
+<!-- HEADER -->
 
 <header>
 
@@ -351,19 +492,72 @@
   </div>
 
   <nav>
-    <a href="#about">About</a>
-    <a href="#menu">Menu</a>
-    <a href="#contact">Contact</a>
+
+    <a href="#about">
+      About
+    </a>
+
+
+    <!-- MENU DROPDOWN -->
+
+    <div class="nav-menu" id="navMenu">
+
+      <button
+        class="menu-toggle"
+        id="menuToggle"
+        type="button"
+        aria-expanded="false">
+        Menu
+      </button>
+
+      <div class="dropdown">
+
+        <a
+          href="Alacarte%20menu%20Haven%20.pdf"
+          target="_blank">
+          À La Carte Menu
+        </a>
+
+        <a
+          href="Lunch%20Menu%20Haven.pdf"
+          target="_blank">
+          Lunch Menu
+        </a>
+
+        <a
+          href="HAVEN%20KITCHEN%20DRINK%20MENU.pdf"
+          target="_blank">
+          Drinks Menu
+        </a>
+
+        <a
+          href="Haven%20Kitchen%20Trojan%20A4.pdf"
+          target="_blank">
+          Dessert Menu
+        </a>
+
+      </div>
+
+    </div>
+
+
+    <a href="#contact">
+      Contact
+    </a>
 
     <a href="#booking" class="reserve">
-    BOOK A TABLE
+      BOOK A TABLE
     </a>
+
   </nav>
 
 </header>
 
 
 <main>
+
+
+<!-- HERO -->
 
 <section class="hero">
 
@@ -375,11 +569,9 @@
       alt="Haven Kitchen Turkish Restaurant logo"
     >
 
-  
-
     <div class="opening">
-    GRAND OPENING<br>
-    29TH SEPTEMBER 2026
+      GRAND OPENING<br>
+      29TH SEPTEMBER 2026
     </div>
 
     <h1>
@@ -399,15 +591,16 @@
 
     <div class="buttons">
 
-      <a class="btn btn-gold" href="#booking">
-    BOOK A TABLE
+      <a
+        class="btn btn-gold"
+        href="#booking">
+        BOOK A TABLE
       </a>
-  
 
-      <a class="btn"
-    href="Alacarte%20menu%20Haven%20.pdf"
-    target="_blank">
-    View Menu
+      <a
+        class="btn"
+        href="#menu">
+        VIEW MENUS
       </a>
 
     </div>
@@ -416,6 +609,8 @@
 
 </section>
 
+
+<!-- ABOUT -->
 
 <section id="about" class="dark-section">
 
@@ -438,10 +633,12 @@
 </section>
 
 
+<!-- MENUS -->
+
 <section id="menu" class="menu">
 
   <div class="eyebrow">
-    Our Menu
+    Our Menus
   </div>
 
   <h2 class="section-title">
@@ -449,21 +646,87 @@
     <span class="gold">Turkey</span>
   </h2>
 
-<a href="Alacarte%20menu%20Haven%20.pdf"
-   target="_blank"
-   class="menu-box"
-   style="display:block; text-decoration:none;">
+  <div class="menu-grid">
 
-    <h3>VIEW OUR MENU</h3>
 
-    <p>
-        Click here to view our à la carte menu.
-    </p>
+    <!-- A LA CARTE -->
 
-</a>
+    <a
+      class="menu-card"
+      href="Alacarte%20menu%20Haven%20.pdf"
+      target="_blank">
+
+      <h3>
+        À La Carte Menu
+      </h3>
+
+      <p>
+        View our full à la carte menu.
+      </p>
+
+    </a>
+
+
+    <!-- LUNCH -->
+
+    <a
+      class="menu-card"
+      href="Lunch%20Menu%20Haven.pdf"
+      target="_blank">
+
+      <h3>
+        Lunch Menu
+      </h3>
+
+      <p>
+        View our lunch menu.
+      </p>
+
+    </a>
+
+
+    <!-- DRINKS -->
+
+    <a
+      class="menu-card"
+      href="HAVEN%20KITCHEN%20DRINK%20MENU.pdf"
+      target="_blank">
+
+      <h3>
+        Drinks Menu
+      </h3>
+
+      <p>
+        View our drinks selection.
+      </p>
+
+    </a>
+
+
+    <!-- DESSERT -->
+
+    <a
+      class="menu-card"
+      href="Haven%20Kitchen%20Trojan%20A4.pdf"
+      target="_blank">
+
+      <h3>
+        Dessert Menu
+      </h3>
+
+      <p>
+        View our dessert menu.
+      </p>
+
+    </a>
+
+
+  </div>
 
 </section>
 
+
+<!-- CONTACT -->
 
 <section id="contact" class="contact">
 
@@ -476,7 +739,8 @@
       </div>
 
       <h2 class="section-title">
-        Find us in <span class="gold">Oundle</span>
+        Find us in
+        <span class="gold">Oundle</span>
       </h2>
 
       <p>
@@ -518,22 +782,25 @@
 
       <div class="socials">
 
-        <a class="btn btn-gold"
-           href="https://wa.me/message/AFVSASXDFZ75G1"
-           target="_blank">
-           WhatsApp
+        <a
+          class="btn btn-gold"
+          href="https://wa.me/message/AFVSASXDFZ75G1"
+          target="_blank">
+          WhatsApp
         </a>
 
-        <a class="btn"
-           href="https://instagram.com/havenkirchenoundle"
-           target="_blank">
-           Instagram
+        <a
+          class="btn"
+          href="https://instagram.com/havenkirchenoundle"
+          target="_blank">
+          Instagram
         </a>
 
-        <a class="btn"
-           href="https://facebook.com/havemkitchenoundle"
-           target="_blank">
-           Facebook
+        <a
+          class="btn"
+          href="https://facebook.com/havemkitchenoundle"
+          target="_blank">
+          Facebook
         </a>
 
       </div>
@@ -543,57 +810,167 @@
   </div>
 
 </section>
-<section id="booking" style="display:block; padding...
-  <div style="max-width:700px; margin:0 auto;">
 
-    <div style="text-align:center; color:#c99a45; letter-spacing:4px; font-size:12px; margin-bottom:12px;">
+
+<!-- BOOKING -->
+
+<section id="booking">
+
+  <div class="booking-wrap">
+
+    <div
+      class="eyebrow"
+      style="text-align:center;">
       RESERVATIONS
     </div>
 
-    <h2 style="text-align:center; font-family:Georgia,serif; font-size:42px; font-weight:normal; margin-bottom:30px;">
+    <h2
+      class="section-title booking-title">
       Book a Table
     </h2>
 
-    <form id="bookingForm" onsubmit="sendBookingToWhatsApp(event)" style="display:grid; gap:16px;">
+    <form
+      id="bookingForm"
+      class="booking-form"
+      onsubmit="sendBookingToWhatsApp(event)">
 
-      <input id="name" type="text" placeholder="Your Name" required
-        style="padding:14px; background:#111511; color:#f4eee2; border:1px solid #c99a45;">
 
-      <input id="phone" type="tel" placeholder="Phone Number" required
-        style="padding:14px; background:#111511; color:#f4eee2; border:1px solid #c99a45;">
+      <input
+        id="name"
+        type="text"
+        placeholder="Your Name"
+        required
+      >
 
-      <input id="date" type="date" min="2026-09-29" required
-        style="padding:14px; background:#111511; color:#f4eee2; border:1px solid #c99a45;">
 
-      <input id="time" type="time" required
-        style="padding:14px; background:#111511; color:#f4eee2; border:1px solid #c99a45;">
+      <input
+        id="phone"
+        type="tel"
+        placeholder="Phone Number"
+        required
+      >
 
-      <input id="guests" type="number" min="1" max="20" placeholder="Number of Guests" required
-        style="padding:14px; background:#111511; color:#f4eee2; border:1px solid #c99a45;">
 
-      <textarea id="notes" placeholder="Special Request (optional)" rows="4"
-        style="padding:14px; background:#111511; color:#f4eee2; border:1px solid #c99a45;"></textarea>
+      <input
+        id="date"
+        type="date"
+        min="2026-09-29"
+        required
+      >
 
-      <button type="submit"
-        style="padding:16px; background:#c99a45; color:#111; border:none; font-weight:bold; letter-spacing:1.5px;">
+
+      <input
+        id="time"
+        type="time"
+        required
+      >
+
+
+      <input
+        id="guests"
+        type="number"
+        min="1"
+        max="20"
+        placeholder="Number of Guests"
+        required
+      >
+
+
+      <textarea
+        id="notes"
+        placeholder="Special Request (optional)"
+        rows="4"></textarea>
+
+
+      <button type="submit">
         SEND BOOKING REQUEST ON WHATSAPP
       </button>
+
 
     </form>
 
   </div>
+
 </section>
 
+
+</main>
+
+
+<footer>
+  © 2026 HAVEN KITCHEN TURKISH RESTAURANT · OUNDLE
+</footer>
+
+
 <script>
+
+/* MENU DROPDOWN */
+
+const navMenu =
+  document.getElementById("navMenu");
+
+const menuToggle =
+  document.getElementById("menuToggle");
+
+
+menuToggle.addEventListener(
+  "click",
+  function(event) {
+
+    event.stopPropagation();
+
+    navMenu.classList.toggle("open");
+
+    menuToggle.setAttribute(
+      "aria-expanded",
+      navMenu.classList.contains("open")
+        ? "true"
+        : "false"
+    );
+
+  }
+);
+
+
+document.addEventListener(
+  "click",
+  function() {
+
+    navMenu.classList.remove("open");
+
+    menuToggle.setAttribute(
+      "aria-expanded",
+      "false"
+    );
+
+  }
+);
+
+
+/* WHATSAPP BOOKING */
+
 function sendBookingToWhatsApp(event) {
+
   event.preventDefault();
 
-  const name = document.getElementById('name').value;
-  const phone = document.getElementById('phone').value;
-  const date = document.getElementById('date').value;
-  const time = document.getElementById('time').value;
-  const guests = document.getElementById('guests').value;
-  const notes = document.getElementById('notes').value;
+  const name =
+    document.getElementById("name").value;
+
+  const phone =
+    document.getElementById("phone").value;
+
+  const date =
+    document.getElementById("date").value;
+
+  const time =
+    document.getElementById("time").value;
+
+  const guests =
+    document.getElementById("guests").value;
+
+  const notes =
+    document.getElementById("notes").value;
+
 
   const message =
 `Hello Haven Kitchen,
@@ -605,23 +982,23 @@ Phone: ${phone}
 Date: ${date}
 Time: ${time}
 Guests: ${guests}
-Special Request: ${notes || 'None'}`;
+Special Request: ${notes || "None"}`;
+
 
   const whatsappUrl =
-  'https://wa.me/447892646721?text=' +
-  encodeURIComponent(message);
+    "https://wa.me/447892646721?text=" +
+    encodeURIComponent(message);
 
-  window.open(whatsappUrl, '_blank');
+
+  window.open(
+    whatsappUrl,
+    "_blank"
+  );
+
 }
+
 </script>
 
-</main>
-  
-
-
-<footer>
-  © 2026 HAVEN KITCHEN TURKISH RESTAURANT · OUNDLE
-</footer>
 
 </body>
 </html>
