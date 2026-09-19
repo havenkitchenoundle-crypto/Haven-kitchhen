@@ -1011,11 +1011,11 @@ Special Request: ${notes || "None"}`;
 fetch("https://shcjbfbezyjganpnkzwt.supabase.co/rest/v1/Reservations", {
   method: "POST",
   headers: {
-    "Content-Type": "application/json",
-    "apikey": "sb_publishable_QOmAaP__sU9YQM-BppPF-Q_K2WJbN-N",
-    
-    "Prefer": "return=representation"
-  },
+  "Content-Type": "application/json",
+  "apikey": "sb_publishable_QOmAaP__sU9YQM-BppPF-Q_K2WJbN-N",
+  "Authorization": "Bearer sb_publishable_QOmAaP__sU9YQM-BppPF-Q_K2WJbN-N",
+  "Prefer": "return=representation"
+},
   body: JSON.stringify({
     Name: name,
     Phone: phone,
