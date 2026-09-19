@@ -1008,38 +1008,7 @@ Date: ${date}
 Time: ${time}
 Guests: ${guests}
 Special Request: ${notes || "None"}`;
-fetch("https://shcjbfbezyjganpnkzwt.supabase.co/rest/v1/Reservations", {
-  method: "POST",
-  headers: {
-  "Content-Type": "application/json",
-  "apikey": "sb_publishable_QOmAaP__sU9YQM-BppPF-Q_K2WJbN-N",
-  "Authorization": "Bearer sb_publishable_QOmAaP__sU9YQM-BppPF-Q_K2WJbN-N",
-  "Prefer": "return=representation"
-},
-  body: JSON.stringify({
-    Name: name,
-    Phone: phone,
-    "E-Mail": email,
-    Booking_date: date,
-    Booking_time: time,
-    Guests: Number(guests),
-    Notes: notes || "",
-    Status: "Pending"
-  })
-})
-.then(async response => {
-  const result = await response.text();
 
-  if (!response.ok) {
-    alert("Supabase error: " + response.status + "\n" + result);
-    return;
-  }
-
-  alert("Reservation saved successfully!");
-})
-.catch(error => {
-  alert("Connection error: " + error.message);
-});
   const whatsappUrl =
     "https://wa.me/447892646721?text=" +
     encodeURIComponent(message);
