@@ -994,7 +994,8 @@ function sendBookingToWhatsApp(event) {
 
   const notes =
     document.getElementById("notes").value;
-
+const email =
+  document.getElementById("email").value;
 
   const message =
 `Hello Haven Kitchen,
@@ -1007,22 +1008,24 @@ Date: ${date}
 Time: ${time}
 Guests: ${guests}
 Special Request: ${notes || "None"}`;
-fetch("https://script.google.com/macros/s/AKfycbxT2RBZzr4dSl1Wi76sUpBqwDVfJpNoZd3xG3CdOd4PNimY_mLHZeTqyV5lNCGtDYvU/exec", {
+fetch("https://shcjbfbezyjganpnkzwt.supabase.co/rest/v1/Reservations", {
   method: "POST",
-  mode: "no-cors",
   headers: {
-    "Content-Type": "text/plain"
-  },
-  body: JSON.stringify({
-    date: date,
-    time: time,
-    name: name,
-    phone: phone,
-    guests: guests,
-    notes: notes
+    "Content-Type": "application/json",
+    "apikey": "sb_publishable_QOmAaP__sU9YQM-BppPF-Q_K2WJbN-N",
+    "Authorization": "Bearer sb_publishable_Q0mAaP__sU9YQM-BppPF-Q_K2WJbN-N"
+ },
+      body: JSON.stringify({
+    Name: name,
+    Phone: phone,
+    "E-Mail": email,
+    Booking_date: date,
+    Booking_time: time,
+    Guests: Number(guests),
+    Notes: notes,
+    Status: "Pending"
   })
 });
-
   const whatsappUrl =
     "https://wa.me/447892646721?text=" +
     encodeURIComponent(message);
