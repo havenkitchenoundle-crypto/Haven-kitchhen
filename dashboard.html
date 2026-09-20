@@ -43,6 +43,8 @@ button {
   padding: 10px 15px;
   font-size: 16px;
   cursor: pointer;
+  border: 0;
+  border-radius: 7px;
 }
 
 .loginButton {
@@ -75,7 +77,7 @@ input[type="date"] {
 .card {
   background: white;
   padding: 15px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0,0,0,.1);
 }
@@ -84,6 +86,30 @@ input[type="date"] {
   font-size: 22px;
   font-weight: bold;
   margin-bottom: 6px;
+}
+
+.status {
+  margin-top: 8px;
+  margin-bottom: 12px;
+  font-weight: bold;
+}
+
+.statusButtons {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.confirmedButton {
+  background: #e3f2fd;
+}
+
+.arrivedButton {
+  background: #e8f5e9;
+}
+
+.cancelledButton {
+  background: #ffebee;
 }
 
 .logout {
@@ -268,8 +294,10 @@ async function loadBookings() {
     document.getElementById("bookings");
 
   if (!response.ok) {
+
     list.innerHTML =
       "<p>Could not load bookings.</p>";
+
     return;
   }
 
@@ -284,6 +312,7 @@ async function loadBookings() {
 
     return;
   }
+
 
   data.forEach(booking => {
 
@@ -312,6 +341,33 @@ async function loadBookings() {
           : ""
         }
 
+        <div class="status">
+          Status:
+          ${booking.status || "confirmed"}
+        </div>
+
+        <div class="statusButtons">
+
+          <button
+            class="confirmedButton"
+            onclick="updateStatus(${booking.id}, 'confirmed')">
+            Confirmed
+          </button>
+
+          <button
+            class="arrivedButton"
+            onclick="updateStatus(${booking.id}, 'arrived')">
+            Arrived
+          </button>
+
+          <button
+            class="cancelledButton"
+            onclick="updateStatus(${booking.id}, 'cancelled')">
+            Cancelled
+          </button>
+
+        </div>
+
       </div>
     `;
 
@@ -320,10 +376,61 @@ async function loadBookings() {
 }
 
 
+async function updateStatus(id, status) {
+
+  if (!accessToken) return;
+
+  try {
+
+    const response = await fetch(
+      `${SUPABASE_URL}/rest/v1/bookings?id=eq.${id}`,
+      {
+        method: "PATCH",
+
+        headers: {
+          "apikey": SUPABASE_KEY,
+          "Authorization":
+            `Bearer ${accessToken}`,
+          "Content-Type":
+            "application/json",
+          "Prefer":
+            "return=minimal"
+        },
+
+        body: JSON.stringify({
+          status: status
+        })
+      }
+    );
+
+    if (!response.ok) {
+
+      alert(
+        "Status could not be updated."
+      );
+
+      return;
+    }
+
+    loadBookings();
+
+  } catch (err) {
+
+    alert(
+      "Status could not be updated."
+    );
+
+  }
+
+}
+
+
 function changeDay(days) {
 
   const date =
-    new Date(picker.value + "T00:00:00");
+    new Date(
+      picker.value + "T00:00:00"
+    );
 
   date.setDate(
     date.getDate() + days
