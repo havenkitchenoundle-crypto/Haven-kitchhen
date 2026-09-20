@@ -13,8 +13,50 @@ body {
   margin: 20px;
 }
 
+.container {
+  max-width: 700px;
+  margin: auto;
+}
+
 h1 {
   text-align: center;
+}
+
+#loginBox {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  max-width: 400px;
+  margin: 60px auto;
+  box-shadow: 0 2px 8px rgba(0,0,0,.1);
+}
+
+#loginBox input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  margin: 7px 0;
+  font-size: 16px;
+}
+
+button {
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.loginButton {
+  width: 100%;
+  margin-top: 10px;
+}
+
+#error {
+  color: red;
+  margin-top: 10px;
+}
+
+#dashboard {
+  display: none;
 }
 
 .top {
@@ -25,13 +67,8 @@ h1 {
   margin: 20px 0;
 }
 
-button {
-  padding: 10px 15px;
-  font-size: 18px;
-}
-
 input[type="date"] {
-  padding: 8px;
+  padding: 9px;
   font-size: 16px;
 }
 
@@ -40,42 +77,179 @@ input[type="date"] {
   padding: 15px;
   margin-bottom: 10px;
   border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 5px rgba(0,0,0,.1);
 }
 
 .time {
   font-size: 22px;
   font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.logout {
+  display: block;
+  margin: 20px auto;
 }
 </style>
 </head>
 
 <body>
 
+<div class="container">
+
+<div id="loginBox">
+
+<h2>Haven Kitchen</h2>
+<p>Booking Dashboard Login</p>
+
+<input
+  type="email"
+  id="email"
+  placeholder="Email"
+>
+
+<input
+  type="password"
+  id="password"
+  placeholder="Password"
+>
+
+<button
+  class="loginButton"
+  onclick="login()">
+  Login
+</button>
+
+<div id="error"></div>
+
+</div>
+
+
+<div id="dashboard">
+
 <h1>Haven Kitchen Bookings</h1>
 
 <div class="top">
-  <button onclick="changeDay(-1)">←</button>
 
-  <input type="date" id="datePicker">
+<button onclick="changeDay(-1)">
+←
+</button>
 
-  <button onclick="changeDay(1)">→</button>
+<input
+  type="date"
+  id="datePicker"
+>
+
+<button onclick="changeDay(1)">
+→
+</button>
+
 </div>
 
 <div id="bookings"></div>
 
+<button
+  class="logout"
+  onclick="logout()">
+Logout
+</button>
+
+</div>
+
+</div>
+
+
 <script>
 
-const SUPABASE_URL = "const SUPABASE_URL = "https://uxyedciaiesddyeibqkt.supabase.co";";
-const SUPABASE_KEY = "sb_publishable_TG1Ym_DZwv7iKg2fZEIpog_XwrvTc0R";
+const SUPABASE_URL =
+"https://uxyedciaiesddyeibqkt.supabase.co";
 
-const picker = document.getElementById("datePicker");
+const SUPABASE_KEY =
+"sb_publishable_TG1Ym_DZwv7iKg2fZEIpog_XwrvTc0R";
 
-picker.value = new Date().toISOString().split("T")[0];
 
-picker.addEventListener("change", loadBookings);
+let accessToken = null;
+
+const picker =
+document.getElementById("datePicker");
+
+
+async function login() {
+
+  const email =
+    document.getElementById("email").value;
+
+  const password =
+    document.getElementById("password").value;
+
+  const error =
+    document.getElementById("error");
+
+  error.innerText = "";
+
+  try {
+
+    const response = await fetch(
+      `${SUPABASE_URL}/auth/v1/token?grant_type=password`,
+      {
+        method: "POST",
+
+        headers: {
+          "apikey": SUPABASE_KEY,
+          "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+          email: email,
+          password: password
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      error.innerText =
+        "Email or password is incorrect.";
+      return;
+    }
+
+    accessToken = data.access_token;
+
+    sessionStorage.setItem(
+      "booking_access_token",
+      accessToken
+    );
+
+    showDashboard();
+
+  } catch (err) {
+
+    error.innerText =
+      "Could not connect. Please try again.";
+
+  }
+}
+
+
+function showDashboard() {
+
+  document.getElementById("loginBox")
+    .style.display = "none";
+
+  document.getElementById("dashboard")
+    .style.display = "block";
+
+  picker.value =
+    new Date().toISOString().split("T")[0];
+
+  loadBookings();
+}
+
 
 async function loadBookings() {
+
+  if (!accessToken) return;
 
   const date = picker.value;
 
@@ -84,19 +258,30 @@ async function loadBookings() {
     {
       headers: {
         "apikey": SUPABASE_KEY,
-        "Authorization": `Bearer ${SUPABASE_KEY}`
+        "Authorization":
+          `Bearer ${accessToken}`
       }
     }
   );
 
-  const data = await response.json();
+  const list =
+    document.getElementById("bookings");
 
-  const list = document.getElementById("bookings");
+  if (!response.ok) {
+    list.innerHTML =
+      "<p>Could not load bookings.</p>";
+    return;
+  }
+
+  const data = await response.json();
 
   list.innerHTML = "";
 
   if (data.length === 0) {
-    list.innerHTML = "<p>No bookings for this day.</p>";
+
+    list.innerHTML =
+      "<p>No bookings for this day.</p>";
+
     return;
   }
 
@@ -110,7 +295,7 @@ async function loadBookings() {
         </div>
 
         <div>
-          <b>${booking.name}</b>
+          <strong>${booking.name}</strong>
         </div>
 
         <div>
@@ -118,24 +303,31 @@ async function loadBookings() {
         </div>
 
         <div>
-          Guests: ${booking.guests}
+          Guests: ${booking.guests || "-"}
         </div>
 
-        ${booking.notes
+        ${
+          booking.notes
           ? `<div>Notes: ${booking.notes}</div>`
           : ""
         }
 
       </div>
     `;
+
   });
+
 }
+
 
 function changeDay(days) {
 
-  const date = new Date(picker.value + "T00:00:00");
+  const date =
+    new Date(picker.value + "T00:00:00");
 
-  date.setDate(date.getDate() + days);
+  date.setDate(
+    date.getDate() + days
+  );
 
   picker.value =
     date.toISOString().split("T")[0];
@@ -143,9 +335,51 @@ function changeDay(days) {
   loadBookings();
 }
 
-loadBookings();
 
-setInterval(loadBookings, 10000);
+picker.addEventListener(
+  "change",
+  loadBookings
+);
+
+
+function logout() {
+
+  sessionStorage.removeItem(
+    "booking_access_token"
+  );
+
+  accessToken = null;
+
+  document.getElementById("dashboard")
+    .style.display = "none";
+
+  document.getElementById("loginBox")
+    .style.display = "block";
+
+}
+
+
+const savedToken =
+sessionStorage.getItem(
+  "booking_access_token"
+);
+
+if (savedToken) {
+
+  accessToken = savedToken;
+
+  showDashboard();
+
+}
+
+
+setInterval(() => {
+
+  if (accessToken) {
+    loadBookings();
+  }
+
+}, 10000);
 
 </script>
 
