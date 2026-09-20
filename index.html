@@ -998,7 +998,7 @@ async function saveBooking(name, phone, date, time, guests, notes) {
 
 /* WHATSAPP BOOKING */
 
-function sendBookingToWhatsApp(event) {
+async function sendBookingToWhatsApp(event) {
 
   event.preventDefault();
 
@@ -1023,8 +1023,13 @@ function sendBookingToWhatsApp(event) {
   const email =
     document.getElementById("email").value;
 
-  saveBooking(name, phone, date, time, guests, notes)
-    .catch(error => console.error("Booking save error:", error));
+  try {
+  await saveBooking(name, phone, date, time, guests, notes);
+} catch (error) {
+  console.error("Booking save error:", error);
+  alert("Booking could not be sent. Please try again.");
+  return;
+}
 
   const message =
 `Hello Haven Kitchen,
