@@ -970,32 +970,32 @@ document.addEventListener(
   }
 );
 
-const SUPABASE_URL = "https://uxyedciaiesddyeibqkt.supabase.co";
+const SUPABASE_URL = "const SUPABASE_URL = "https://uxyedciaiesddyeibqkt.supabase.co";
 const SUPABASE_KEY = "sb_publishable_TG1Ym_DZwv7iKg2fZEIpog_XwrvTc0R";
 
 async function saveBooking(name, phone, date, time, guests, notes) {
-const response = await fetch(${SUPABASE_URL}/rest/v1/bookings, { method: "POST", headers: { "apikey": SUPABASE_KEY, "Authorization":Bearer ${SUPABASE_KEY},
-"Content-Type": "application/json",
-"Prefer": "return=minimal"
-},
-body: JSON.stringify({
-name: name,
-phone: phone,
-booking_date: date,
-booking_time: time,
-guests: Number(guests),
-notes: notes
-})
-});
+  const response = await fetch(`${SUPABASE_URL}/rest/v1/bookings`, {
+    method: "POST",
+    headers: {
+      "apikey": SUPABASE_KEY,
+      "Authorization": `Bearer ${SUPABASE_KEY}`,
+      "Content-Type": "application/json",
+      "Prefer": "return=minimal"
+    },
+    body: JSON.stringify({
+      name: name,
+      phone: phone,
+      booking_date: date,
+      booking_time: time,
+      guests: Number(guests),
+      notes: notes
+    })
+  });
 
-if (!response.ok) {
-throw new Error("Booking could not be saved");
+  if (!response.ok) {
+    throw new Error("Booking could not be saved");
+  }
 }
-}
-
-/* WHATSAPP BOOKING */
-
-function sendBookingToWhatsApp(event) {
 
 /* WHATSAPP BOOKING */
 
@@ -1020,10 +1020,13 @@ function sendBookingToWhatsApp(event) {
 
   const notes =
     document.getElementById("notes").value;
-const email =
-  document.getElementById("email").value;
-saveBooking(name, phone, date, time, guests, notes)
-  .catch(error => console.error("Booking save error:", error));
+
+  const email =
+    document.getElementById("email").value;
+
+  saveBooking(name, phone, date, time, guests, notes)
+    .catch(error => console.error("Booking save error:", error));
+
   const message =
 `Hello Haven Kitchen,
 
@@ -1040,12 +1043,10 @@ Special Request: ${notes || "None"}`;
     "https://wa.me/447892646721?text=" +
     encodeURIComponent(message);
 
-
   window.open(
     whatsappUrl,
     "_blank"
   );
-
 }
 
 </script>
