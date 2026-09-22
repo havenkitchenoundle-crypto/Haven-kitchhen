@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Haven Kitchen | Bookings</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #111511;
+      color: #f4eee2;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: #c99a45;
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .login-box {
+      max-width: 420px;
+      margin: 40px auto;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 12px;
+      background: #111511;
+      color: #f4eee2;
+      border: 1px solid #c99a45;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background: #c99a45;
+      color: #111;
+      border: none;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    #bookings {
+      display: none;
+    }
+
+    .booking {
+      border: 1px solid #c99a45;
+      padding: 15px;
+      margin-bottom: 14px;
+      background: #171c17;
+    }
+
+    .booking strong {
+      color: #c99a45;
+    }
+
+    .logout {
+      margin-bottom: 20px;
+    }
+
+    #message {
+      margin-top: 15px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1>Haven Kitchen Bookings</h1>
+
+  <div id="login" class="login-box">
+
+    <input
+      id="email"
+      type="email"
+      placeholder="Email"
+      autocomplete="email"
+    >
+
+    <input
+      id="password"
+      type="password"
+      placeholder="Password"
+      autocomplete="current-password"
+    >
+
+    <button onclick="login()">Login</button>
+
+    <div id="message"></div>
+
+  </div>
+
+  <div id="bookings">
+
+    <button class="logout" onclick="logout()">
+      Logout
+    </button>
+
+    <div id="bookingList"></div>
+
+  </div>
+
+</div>
+
+<script>
+
+const SUPABASE_URL =
+  "https://uxyedciaiesddyeibqkt.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_TG1Ym_DZwv7iKg2fZEIpog_XwrvTc0R";
+
+let accessToken = null;
+
+
+async function login() {
+
+  const email =
+    document.getElementById("email").value.trim();
+
+  const password =
+    document.getElementById("password").value;
+
+  const message =
+    document.getElementById("message");
+
+  message.textContent = "Signing in...";
+
+  try {
+
+    const response = await fetch(
+      `${SUPABASE_URL}/auth/v1/token?grant_type=password`,
+      {
+        method: "POST",
+        headers: {
+          "apikey": SUPABASE_KEY,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data.error_description ||
+        data.msg ||
+        "Login failed"
+      );
+    }
+
+    accessToken = data.access_token;
+
+    document.getElementById("login").style.display =
+      "none";
+
+    document.getElementById("bookings").style.display =
+      "block";
+
+    await loadBookings();
+
+  } catch (error) {
+
+    message.textContent = error.message;
+
+  }
+
+}
+
+
+async function loadBookings() {
+
+  try {
+
+    const response = await fetch(
+      `${SUPABASE_URL}/rest/v1/bookings?select=*&order=booking_date.asc,booking_time.asc`,
+      {
+        headers: {
+          "apikey": SUPABASE_KEY,
+          "Authorization": `Bearer ${accessToken}`
+        }
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Could not load bookings.");
+    }
+
+    const bookings = await response.json();
+
+    const list =
+      document.getElementById("bookingList");
+
+    list.innerHTML = "";
+
+    if (bookings.length === 0) {
+      list.textContent = "No bookings found.";
+      return;
+    }
+
+    bookings.forEach(booking => {
+
+      const card =
+        document.createElement("div");
+
+      card.className = "booking";
+
+      const name = document.createElement("p");
+      name.innerHTML = "<strong>Name:</strong> ";
+      name.appendChild(
+        document.createTextNode(booking.name || "")
+      );
+
+      const date = document.createElement("p");
+      date.innerHTML = "<strong>Date:</strong> ";
+      date.appendChild(
+        document.createTextNode(booking.booking_date || "")
+      );
+
+      const time = document.createElement("p");
+      time.innerHTML = "<strong>Time:</strong> ";
+      time.appendChild(
+        document.createTextNode(
+          (booking.booking_time || "").substring(0, 5)
+        )
+      );
+
+      const guests = document.createElement("p");
+      guests.innerHTML = "<strong>Guests:</strong> ";
+      guests.appendChild(
+        document.createTextNode(booking.guests ?? "")
+      );
+
+      const phone = document.createElement("p");
+      phone.innerHTML = "<strong>Phone:</strong> ";
+      phone.appendChild(
+        document.createTextNode(booking.phone || "")
+      );
+
+      const email = document.createElement("p");
+      email.innerHTML = "<strong>Email:</strong> ";
+      email.appendChild(
+        document.createTextNode(booking.email || "")
+      );
+
+      const notes = document.createElement("p");
+      notes.innerHTML = "<strong>Notes:</strong> ";
+      notes.appendChild(
+        document.createTextNode(booking.notes || "-")
+      );
+
+      card.append(
+        name,
+        date,
+        time,
+        guests,
+        phone,
+        email,
+        notes
+      );
+
+      list.appendChild(card);
+
+    });
+
+  } catch (error) {
+
+    document.getElementById("bookingList").textContent =
+      error.message;
+
+  }
+
+}
+
+
+function logout() {
+
+  accessToken = null;
+
+  document.getElementById("bookings").style.display =
+    "none";
+
+  document.getElementById("login").style.display =
+    "block";
+
+  document.getElementById("password").value = "";
+
+  document.getElementById("message").textContent = "";
+
+}
+
+</script>
+
+</body>
+</html>
