@@ -191,7 +191,8 @@ async function login() {
 
     document.getElementById("bookings").style.display =
       "block";
-
+const today = new Date().toLocaleDateString("en-CA");
+document.getElementById("bookingDate").value = today;
     await loadBookings();
 
   } catch (error) {
