@@ -292,17 +292,60 @@ if (!selectedDate) {
         document.createTextNode(booking.notes || "-")
       );
 
-      card.append(
-        name,
-        date,
-        time,
-        guests,
-        phone,
-        email,
-        notes
-      );
+      const actions = document.createElement("div");
+actions.style.display = "grid";
+actions.style.gridTemplateColumns = "1fr 1fr";
+actions.style.gap = "8px";
+actions.style.marginTop = "15px";
 
-      list.appendChild(card);
+["Confirmed", "Arrived", "Late"].forEach(status => {
+
+  const button = document.createElement("button");
+
+  button.textContent = status;
+  button.style.background =
+    booking.status === status ? "#2e7d32" : "#ffffff";
+  button.style.color =
+    booking.status === status ? "#ffffff" : "#111111";
+
+  button.onclick = async () => {
+    await updateBookingStatus(booking.id, status);
+  };
+
+  actions.appendChild(button);
+});
+
+const cancelButton = document.createElement("button");
+
+cancelButton.textContent = "Cancel";
+cancelButton.style.background = "#ffffff";
+cancelButton.style.color = "#111111";
+
+cancelButton.onclick = async () => {
+
+  const confirmed = confirm(
+    "Are you sure you want to cancel this booking?"
+  );
+
+  if (confirmed) {
+    await cancelBooking(booking.id);
+  }
+};
+
+actions.appendChild(cancelButton);
+
+card.append(
+  name,
+  date,
+  time,
+  guests,
+  phone,
+  email,
+  notes,
+  actions
+);
+
+list.appendChild(card);
 
     });
 
@@ -315,7 +358,62 @@ if (!selectedDate) {
 
 }
 
+async function updateBookingStatus(id, status) {
 
+  try {
+
+    const response = await fetch(
+      `${SUPABASE_URL}/rest/v1/bookings?id=eq.${id}`,
+      {
+        method: "PATCH",
+        headers: {
+          "apikey": SUPABASE_KEY,
+          "Authorization": `Bearer ${accessToken}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          status: status
+        })
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Could not update booking.");
+    }
+
+    await loadBookings();
+
+  } catch (error) {
+    alert(error.message);
+  }
+}
+
+
+async function cancelBooking(id) {
+
+  try {
+
+    const response = await fetch(
+      `${SUPABASE_URL}/rest/v1/bookings?id=eq.${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "apikey": SUPABASE_KEY,
+          "Authorization": `Bearer ${accessToken}`
+        }
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Could not cancel booking.");
+    }
+
+    await loadBookings();
+
+  } catch (error) {
+    alert(error.message);
+  }
+}
 function logout() {
 
   accessToken = null;
