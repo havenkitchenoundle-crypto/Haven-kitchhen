@@ -111,11 +111,17 @@
 
   <div id="bookings">
 
-    <button class="logout" onclick="logout()">
-      Logout
-    </button>
+  <button class="logout" onclick="logout()">
+    Logout
+  </button>
 
-    <div id="bookingList"></div>
+  <input
+    id="bookingDate"
+    type="date"
+    onchange="loadBookings()"
+  >
+
+  <div id="bookingList"></div>
 
   </div>
 
@@ -194,9 +200,16 @@ async function login() {
 async function loadBookings() {
 
   try {
+const selectedDate =
+  document.getElementById("bookingDate").value;
 
+if (!selectedDate) {
+  document.getElementById("bookingList").textContent =
+    "Please select a date.";
+  return;
+}
     const response = await fetch(
-      `${SUPABASE_URL}/rest/v1/bookings?select=*&order=booking_date.asc,booking_time.asc`,
+      `${SUPABASE_URL}/rest/v1/bookings?select=*&booking_date=eq.${selectedDate}&order=booking_time.asc`,
       {
         headers: {
           "apikey": SUPABASE_KEY,
