@@ -378,7 +378,12 @@ section {
   display: grid;
   gap: 16px;
 }
-
+.booking-label {
+  color: #c9a24d;
+  font-size: 14px;
+  letter-spacing: 1px;
+  margin-bottom: -8px;
+}
 .booking-form input,
 .booking-form select,
 .booking-form textarea {
@@ -874,7 +879,7 @@ nav .reserve {
   placeholder="Email Address"
   required
 >
-
+<label for="date" class="booking-label">Select Date</label>
       <input
         id="date"
         type="date"
