@@ -992,7 +992,8 @@ async function saveBooking(name, phone, email, date, time, guests, notes) {
   });
 
   if (!response.ok) {
-    throw new Error("Booking could not be saved");
+  const errorText = await response.text();
+  throw new Error("Supabase error: " + response.status + " - " + errorText);
   }
 }
 
@@ -1027,9 +1028,10 @@ async function confirmBooking(event) {
   await saveBooking(name, phone, email, date, time, guests, notes);
 } catch (error) {
   console.error("Booking save error:", error);
-  alert("Booking could not be sent. Please try again.");
+  alert(error.message);
   return;
-}
+  }
+
 
   alert(
   "Your booking has been confirmed!\n\n" +
