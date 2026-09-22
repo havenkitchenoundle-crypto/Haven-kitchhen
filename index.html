@@ -851,8 +851,7 @@ nav .reserve {
     <form
       id="bookingForm"
       class="booking-form"
-      onsubmit="sendBookingToWhatsApp(event)">
-
+      onsubmit="confirmBooking(event)">
 
       <input
         id="name"
@@ -907,7 +906,7 @@ nav .reserve {
 
 
       <button type="submit">
-        SEND BOOKING REQUEST ON WHATSAPP
+        CONFIRM BOOKING
       </button>
 
 
@@ -972,7 +971,7 @@ document.addEventListener(
 
 const SUPABASE_URL = "https://uxyedciaiesddyeibqkt.supabase.co";
 const SUPABASE_KEY = "sb_publishable_TG1Ym_DZwv7iKg2fZEIpog_XwrvTc0R";
-async function saveBooking(name, phone, date, time, guests, notes) {
+async function saveBooking(name, phone, email, date, time, guests, notes) {
   const response = await fetch(`${SUPABASE_URL}/rest/v1/bookings`, {
     method: "POST",
     headers: {
@@ -984,6 +983,7 @@ async function saveBooking(name, phone, date, time, guests, notes) {
     body: JSON.stringify({
       name: name,
       phone: phone,
+      email: email,
       booking_date: date,
       booking_time: time,
       guests: Number(guests),
@@ -996,9 +996,9 @@ async function saveBooking(name, phone, date, time, guests, notes) {
   }
 }
 
-/* WHATSAPP BOOKING */
 
-async function sendBookingToWhatsApp(event) {
+
+async function confirmBooking(event) {
 
   event.preventDefault();
 
@@ -1024,32 +1024,21 @@ async function sendBookingToWhatsApp(event) {
     document.getElementById("email").value;
 
   try {
-  await saveBooking(name, phone, date, time, guests, notes);
+  await saveBooking(name, phone, email, date, time, guests, notes);
 } catch (error) {
   console.error("Booking save error:", error);
   alert("Booking could not be sent. Please try again.");
   return;
 }
 
-  const message =
-`Hello Haven Kitchen,
+  alert(
+  "Your booking has been confirmed!\n\n" +
+  "Date: " + date + "\n" +
+  "Time: " + time + "\n" +
+  "Guests: " + guests
+);
 
-I would like to request a table reservation.
-
-Name: ${name}
-Phone: ${phone}
-Date: ${date}
-Time: ${time}
-Guests: ${guests}
-Special Request: ${notes || "None"}`;
-
-  const whatsappUrl =
-    "https://wa.me/447892646721?text=" +
-    encodeURIComponent(message);
-
-  window.open(
-    whatsappUrl,
-    "_blank"
+document.getElementById("bookingForm").reset();
   );
 }
 
