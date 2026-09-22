@@ -975,9 +975,10 @@ document.addEventListener(
 
 const SUPABASE_URL = "https://uxyedciaiesddyeibqkt.supabase.co";
 const SUPABASE_KEY = "sb_publishable_TG1Ym_DZwv7iKg2fZEIpog_XwrvTc0R";
-async function checkAvailability(date, time, guests) {
+
+async function createBookingSafe(name, phone, email, date, time, guests, notes) {
   const response = await fetch(
-    `${SUPABASE_URL}/rest/v1/rpc/check_booking_availability`,
+    `${SUPABASE_URL}/rest/v1/rpc/create_booking_safe`,
     {
       method: "POST",
       headers: {
@@ -986,54 +987,29 @@ async function checkAvailability(date, time, guests) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
+        p_name: name,
+        p_phone: phone,
+        p_email: email,
         p_date: date,
         p_time: time,
-        p_guests: Number(guests)
+        p_guests: Number(guests),
+        p_notes: notes
       })
     }
   );
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error("Availability check failed: " + errorText);
+    throw new Error("Booking error: " + errorText);
   }
 
   return await response.json();
 }
-  
-async function saveBooking(name, phone, email, date, time, guests, notes) {
-  const response = await fetch(`${SUPABASE_URL}/rest/v1/bookings`, {
-    method: "POST",
-    headers: {
-      "apikey": SUPABASE_KEY,
-      "Authorization": `Bearer ${SUPABASE_KEY}`,
-      "Content-Type": "application/json",
-      "Prefer": "return=minimal"
-    },
-    body: JSON.stringify({
-      name: name,
-      phone: phone,
-      email: email,
-      booking_date: date,
-      booking_time: time,
-      guests: Number(guests),
-      notes: notes
-    })
-  });
-
-  if (!response.ok) {
-  const errorText = await response.text();
-  throw new Error("Supabase error: " + response.status + " - " + errorText);
-  }
-}
-
-
 
 async function confirmBooking(event) {
-
   event.preventDefault();
 
-    const name =
+  const name =
     document.getElementById("name").value;
 
   const phone =
@@ -1055,14 +1031,20 @@ async function confirmBooking(event) {
     document.getElementById("email").value;
 
   try {
-    const available = await checkAvailability(date, time, guests);
+    const booked = await createBookingSafe(
+      name,
+      phone,
+      email,
+      date,
+      time,
+      guests,
+      notes
+    );
 
-    if (!available) {
+    if (!booked) {
       alert("Sorry, we don't have availability for the selected time. Please choose another time.");
       return;
     }
-
-    await saveBooking(name, phone, email, date, time, guests, notes);
 
   } catch (error) {
     console.error("Booking error:", error);
