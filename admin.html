@@ -3,157 +3,1672 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Haven Kitchen | Reservations</title>
+<title>Haven Kitchen | Reservations V2</title>
+
 <style>
 *{box-sizing:border-box}
-:root{--bg:#0b0d0c;--panel:#111512;--panel2:#171c18;--border:#303831;--gold:#c99a45;--text:#f4eee2;--muted:#9ca39d;--green:#3f7654;--purple:#7655a8;--red:#8f4141}
-body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
-#loginScreen{min-height:100vh;display:flex;justify-content:center;align-items:center;padding:25px}
-.login-card{width:100%;max-width:420px;background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:30px}
-.login-card h1{margin:0 0 5px;color:var(--gold);font-family:Georgia,serif}
-.login-card p{color:var(--muted);margin-bottom:25px}
-.login-card input{width:100%;padding:14px;margin-bottom:12px;background:#0d100e;color:white;border:1px solid var(--border);border-radius:8px;font-size:15px}
-button{cursor:pointer}.login-button{width:100%;border:0;padding:14px;background:var(--gold);color:#111;border-radius:8px;font-weight:bold;font-size:15px}
-#loginMessage{color:#e88989;margin-top:14px}
-#adminApp{display:none;min-height:100vh}
-.topbar{min-height:70px;background:#101311;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:15px;padding:12px 20px}
-.brand{font-family:Georgia,serif;letter-spacing:2px;font-size:20px;white-space:nowrap}.brand span{color:var(--gold)}
-.top-controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
-.top-controls button,.top-controls input,.top-controls select{background:#181d19;color:var(--text);border:1px solid var(--border);border-radius:7px;padding:9px 11px}
-.today-button{color:var(--gold)!important}.logout-button{border-color:#694040!important}
-.layout{display:grid;grid-template-columns:390px 1fr;min-height:calc(100vh - 70px)}
-.sidebar{background:#101311;border-right:1px solid var(--border);overflow-y:auto;max-height:calc(100vh - 70px)}
-.sidebar-header{padding:18px;border-bottom:1px solid var(--border);position:sticky;top:0;background:#101311;z-index:5}
-.sidebar-header h2{margin:0 0 12px;font-size:20px}.stats{display:flex;gap:8px}
-.stat{flex:1;background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:9px;text-align:center}
-.stat strong{display:block;color:var(--gold);font-size:20px}.stat span{color:var(--muted);font-size:11px}
-.booking-list{padding:10px}.booking-card{background:var(--panel2);border:1px solid var(--border);border-left:4px solid var(--gold);border-radius:9px;padding:13px;margin-bottom:9px;cursor:pointer}
-.booking-card.cancelled{opacity:.55;border-left-color:var(--red)}.booking-top{display:flex;justify-content:space-between;gap:10px}
-.booking-time{color:var(--gold);font-weight:bold;font-size:17px}.booking-guests{color:#d6d9d6;font-size:13px}
-.booking-name{margin-top:7px;font-weight:bold}.booking-note{color:#c7b98f;font-size:12px;margin-top:5px}
-.booking-status{display:inline-block;margin-top:8px;padding:4px 7px;background:#242b25;border-radius:5px;color:#bbc3bc;font-size:10px;text-transform:uppercase}
-.floor-area{padding:25px;overflow:auto}.floor-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}.floor-title h2{margin:0;font-size:19px}
-.legend{display:flex;gap:14px;font-size:11px;color:var(--muted)}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}.dot.available{background:var(--green)}.dot.reserved{background:var(--purple)}
-.floor{position:relative;width:850px;height:680px;min-width:850px;background:#111512;border:1px solid var(--border);border-radius:14px}
-.table{position:absolute;width:76px;height:76px;border:2px solid #566159;background:#1b211c;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:bold}
-.table.four{width:90px;height:70px;border-radius:12px}.table.large{width:105px;height:78px;border-radius:12px}.table.reserved{background:#4e3b69;border-color:#8a6bb4}
-.t1{left:510px;top:35px}.t2{left:620px;top:35px}.t3{left:730px;top:145px}.t4{left:730px;top:245px}.t5{left:715px;top:350px}
-.t16{left:90px;top:160px}.t17{left:190px;top:160px}.t18{left:295px;top:160px}.t14{left:115px;top:285px}.t15{left:235px;top:285px}
-.t10{left:85px;top:420px}.t11{left:185px;top:420px}.t12{left:285px;top:420px}.t8{left:520px;top:470px}.t7{left:630px;top:470px}.t9{left:640px;top:575px}
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:50;padding:20px;align-items:center;justify-content:center}.modal.open{display:flex}
-.modal-card{width:100%;max-width:520px;max-height:90vh;overflow-y:auto;background:#151a16;border:1px solid var(--border);border-radius:14px;padding:22px}
-.modal-header{display:flex;justify-content:space-between;gap:10px}.modal-header h2{margin:0}.close{background:none;color:white;border:0;font-size:25px}
-.detail-row{padding:10px 0;border-bottom:1px solid var(--border)}.detail-label{color:var(--muted);font-size:11px;text-transform:uppercase;margin-bottom:3px}.detail-value{font-size:15px}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:18px}.action-button{padding:11px;border:0;border-radius:7px;font-weight:bold;color:white}
-.confirmed{background:#426d4e}.arrived{background:#316a72}.late{background:#8b6b31}.cancel{background:#873f3f}.empty-message{padding:30px 15px;color:var(--muted);text-align:center}
-@media(max-width:850px){.topbar{align-items:flex-start;flex-direction:column}.top-controls{justify-content:flex-start}.layout{display:block}.sidebar{max-height:none;border-right:0;border-bottom:1px solid var(--border)}.floor-area{padding:15px}.floor{transform-origin:top left}}
+
+:root{
+  --bg:#0b0d0c;
+  --panel:#111512;
+  --panel2:#171c18;
+  --border:#303831;
+  --gold:#c99a45;
+  --text:#f4eee2;
+  --muted:#9ca39d;
+  --green:#355f43;
+  --purple:#7655a8;
+  --red:#8f4141;
+}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial,sans-serif;
+}
+
+/* LOGIN */
+
+#loginScreen{
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:25px;
+}
+
+.login-card{
+  width:100%;
+  max-width:420px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:30px;
+}
+
+.login-card h1{
+  margin:0 0 5px;
+  color:var(--gold);
+  font-family:Georgia,serif;
+}
+
+.login-card p{
+  color:var(--muted);
+  margin-bottom:25px;
+}
+
+.login-card input{
+  width:100%;
+  padding:14px;
+  margin-bottom:12px;
+  background:#0d100e;
+  color:white;
+  border:1px solid var(--border);
+  border-radius:8px;
+  font-size:15px;
+}
+
+button{cursor:pointer}
+
+.login-button{
+  width:100%;
+  border:0;
+  padding:14px;
+  background:var(--gold);
+  color:#111;
+  border-radius:8px;
+  font-weight:bold;
+}
+
+#loginMessage{
+  color:#e88989;
+  margin-top:14px;
+}
+
+/* APP */
+
+#adminApp{
+  display:none;
+  min-height:100vh;
+}
+
+.topbar{
+  min-height:70px;
+  background:#101311;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  padding:12px 20px;
+}
+
+.brand{
+  font-family:Georgia,serif;
+  letter-spacing:2px;
+  font-size:20px;
+  white-space:nowrap;
+}
+
+.brand span{color:var(--gold)}
+
+.top-controls{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.top-controls button,
+.top-controls input,
+.top-controls select{
+  background:#181d19;
+  color:var(--text);
+  border:1px solid var(--border);
+  border-radius:7px;
+  padding:9px 11px;
+}
+
+.today-button{color:var(--gold)!important}
+
+.new-booking{
+  background:var(--gold)!important;
+  color:#111!important;
+  font-weight:bold;
+}
+
+.logout-button{
+  border-color:#694040!important;
+}
+
+/* MAIN */
+
+.layout{
+  display:grid;
+  grid-template-columns:390px 1fr;
+  min-height:calc(100vh - 70px);
+}
+
+/* LEFT RESERVATIONS */
+
+.sidebar{
+  background:#101311;
+  border-right:1px solid var(--border);
+  overflow-y:auto;
+  max-height:calc(100vh - 70px);
+}
+
+.sidebar-header{
+  padding:18px;
+  border-bottom:1px solid var(--border);
+  position:sticky;
+  top:0;
+  background:#101311;
+  z-index:5;
+}
+
+.sidebar-header h2{
+  margin:0 0 12px;
+}
+
+.stats{
+  display:flex;
+  gap:8px;
+}
+
+.stat{
+  flex:1;
+  background:var(--panel2);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:9px;
+  text-align:center;
+}
+
+.stat strong{
+  display:block;
+  color:var(--gold);
+  font-size:20px;
+}
+
+.stat span{
+  color:var(--muted);
+  font-size:11px;
+}
+
+.booking-list{padding:10px}
+
+.booking-card{
+  background:var(--panel2);
+  border:1px solid var(--border);
+  border-left:4px solid var(--gold);
+  border-radius:9px;
+  padding:13px;
+  margin-bottom:9px;
+  cursor:pointer;
+}
+
+.booking-card:hover{
+  border-color:#696f69;
+}
+
+.booking-card.cancelled{
+  opacity:.45;
+  border-left-color:var(--red);
+}
+
+.booking-top{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.booking-time{
+  color:var(--gold);
+  font-weight:bold;
+  font-size:17px;
+}
+
+.booking-guests{
+  color:#d6d9d6;
+  font-size:13px;
+}
+
+.booking-name{
+  margin-top:7px;
+  font-weight:bold;
+}
+
+.booking-table{
+  color:#bba3df;
+  font-size:12px;
+  margin-top:5px;
+}
+
+.booking-note{
+  color:#c7b98f;
+  font-size:12px;
+  margin-top:5px;
+}
+
+.booking-status{
+  display:inline-block;
+  margin-top:8px;
+  padding:4px 7px;
+  background:#242b25;
+  border-radius:5px;
+  color:#bbc3bc;
+  font-size:10px;
+  text-transform:uppercase;
+}
+
+/* FLOOR */
+
+.floor-area{
+  padding:25px;
+  overflow:auto;
+}
+
+.floor-title{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:15px;
+  gap:15px;
+}
+
+.floor-title h2{
+  margin:0;
+}
+
+.legend{
+  display:flex;
+  gap:14px;
+  font-size:11px;
+  color:var(--muted);
+}
+
+.dot{
+  display:inline-block;
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  margin-right:4px;
+}
+
+.dot.available{background:var(--green)}
+.dot.reserved{background:var(--purple)}
+
+.floor{
+  position:relative;
+  width:850px;
+  height:680px;
+  min-width:850px;
+  background:#111512;
+  border:1px solid var(--border);
+  border-radius:14px;
+}
+
+/* TABLES */
+
+.table{
+  position:absolute;
+  width:76px;
+  height:76px;
+  border:2px solid #566159;
+  background:#1b211c;
+  border-radius:50%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  font-size:19px;
+  font-weight:bold;
+  transition:.2s;
+  cursor:pointer;
+}
+
+.table small{
+  display:none;
+  margin-top:3px;
+  font-size:9px;
+  font-weight:normal;
+}
+
+.table.four{
+  width:90px;
+  height:70px;
+  border-radius:12px;
+}
+
+.table.large{
+  width:105px;
+  height:78px;
+  border-radius:12px;
+}
+
+.table.reserved{
+  background:#4e3b69;
+  border-color:#a582d1;
+  box-shadow:0 0 15px rgba(118,85,168,.25);
+}
+
+.table.reserved small{
+  display:block;
+}
+
+.table.cancelled{
+  background:#1b211c;
+  border-color:#566159;
+}
+
+/* FLOOR POSITIONS */
+
+.t1{left:510px;top:35px}
+.t2{left:620px;top:35px}
+
+.t3{left:730px;top:145px}
+.t4{left:730px;top:245px}
+.t5{left:715px;top:350px}
+
+.t16{left:90px;top:160px}
+.t17{left:190px;top:160px}
+.t18{left:295px;top:160px}
+
+.t14{left:115px;top:285px}
+.t15{left:235px;top:285px}
+
+.t10{left:85px;top:420px}
+.t11{left:185px;top:420px}
+.t12{left:285px;top:420px}
+
+.t8{left:520px;top:470px}
+.t7{left:630px;top:470px}
+
+.t9{left:640px;top:575px}
+
+/* MODAL */
+
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.72);
+  z-index:50;
+  padding:20px;
+  align-items:center;
+  justify-content:center;
+}
+
+.modal.open{display:flex}
+
+.modal-card{
+  width:100%;
+  max-width:520px;
+  max-height:90vh;
+  overflow-y:auto;
+  background:#151a16;
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:22px;
+}
+
+.modal-header{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.modal-header h2{margin:0}
+
+.close{
+  background:none;
+  color:white;
+  border:0;
+  font-size:25px;
+}
+
+.detail-row{
+  padding:10px 0;
+  border-bottom:1px solid var(--border);
+}
+
+.detail-label{
+  color:var(--muted);
+  font-size:11px;
+  text-transform:uppercase;
+  margin-bottom:3px;
+}
+
+.detail-value{
+  font-size:15px;
+}
+
+.actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:18px;
+}
+
+.action-button{
+  padding:11px;
+  border:0;
+  border-radius:7px;
+  font-weight:bold;
+  color:white;
+}
+
+.confirmed{background:#426d4e}
+.arrived{background:#316a72}
+.late{background:#8b6b31}
+.cancel{background:#873f3f}
+
+.empty-message{
+  padding:30px 15px;
+  color:var(--muted);
+  text-align:center;
+}
+
+/* MOBILE */
+
+@media(max-width:850px){
+
+  .topbar{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .layout{
+    display:block;
+  }
+
+  .sidebar{
+    max-height:none;
+    border-right:0;
+    border-bottom:1px solid var(--border);
+  }
+
+  .floor-area{
+    padding:15px;
+  }
+}
+
 </style>
 </head>
+
 <body>
-<div id="loginScreen"><div class="login-card"><h1>Haven Kitchen</h1><p>Reservation Management</p>
-<input id="loginEmail" type="email" placeholder="Email" autocomplete="email">
-<input id="loginPassword" type="password" placeholder="Password" autocomplete="current-password">
-<button class="login-button" onclick="login()">LOGIN</button><div id="loginMessage"></div></div></div>
+
+<!-- LOGIN -->
+
+<div id="loginScreen">
+
+<div class="login-card">
+
+<h1>Haven Kitchen</h1>
+<p>Reservation Management V2</p>
+
+<input
+id="loginEmail"
+type="email"
+placeholder="Email"
+autocomplete="email">
+
+<input
+id="loginPassword"
+type="password"
+placeholder="Password"
+autocomplete="current-password">
+
+<button
+class="login-button"
+onclick="login()">
+LOGIN
+</button>
+
+<div id="loginMessage"></div>
+
+</div>
+</div>
+
+
+<!-- ADMIN -->
 
 <div id="adminApp">
-<div class="topbar"><div class="brand">HAVEN <span>KITCHEN</span></div>
-<div class="top-controls"><button onclick="changeDate(-1)">←</button><button class="today-button" onclick="goToday()">Today</button>
-<input type="date" id="bookingDate" onchange="loadBookings()"><button onclick="changeDate(1)">→</button>
-<select id="serviceFilter"><option value="all">All Day</option><option value="lunch">Lunch</option><option value="dinner">Dinner</option></select>
-<button class="logout-button" onclick="logout()">Logout</button></div></div>
 
-<div class="layout"><aside class="sidebar"><div class="sidebar-header"><h2>Reservations</h2><div class="stats">
-<div class="stat"><strong id="bookingCount">0</strong><span>Bookings</span></div>
-<div class="stat"><strong id="guestCount">0</strong><span>Guests</span></div></div></div>
-<div id="bookingList" class="booking-list"></div></aside>
+<div class="topbar">
 
-<main class="floor-area"><div class="floor-title"><h2>Floor Plan</h2><div class="legend"><span><i class="dot available"></i> Available</span><span><i class="dot reserved"></i> Reserved</span></div></div>
+<div class="brand">
+HAVEN <span>KITCHEN</span>
+</div>
+
+<div class="top-controls">
+
+<button onclick="changeDate(-1)">←</button>
+
+<button
+class="today-button"
+onclick="goToday()">
+Today
+</button>
+
+<input
+type="date"
+id="bookingDate"
+onchange="loadBookings()">
+
+<button onclick="changeDate(1)">→</button>
+
+<select
+id="serviceFilter"
+onchange="renderBookings()">
+
+<option value="all">All Day</option>
+<option value="lunch">Lunch</option>
+<option value="dinner">Dinner</option>
+
+</select>
+
+<button
+class="new-booking"
+onclick="alert('Manual booking form will be added next.')">
++ New Booking
+</button>
+
+<button
+class="logout-button"
+onclick="logout()">
+Logout
+</button>
+
+</div>
+</div>
+
+
+<div class="layout">
+
+<!-- LEFT -->
+
+<aside class="sidebar">
+
+<div class="sidebar-header">
+
+<h2>Reservations</h2>
+
+<div class="stats">
+
+<div class="stat">
+<strong id="bookingCount">0</strong>
+<span>Bookings</span>
+</div>
+
+<div class="stat">
+<strong id="guestCount">0</strong>
+<span>Guests</span>
+</div>
+
+</div>
+</div>
+
+<div
+id="bookingList"
+class="booking-list">
+</div>
+
+</aside>
+
+
+<!-- FLOOR -->
+
+<main class="floor-area">
+
+<div class="floor-title">
+
+<h2>Floor Plan</h2>
+
+<div class="legend">
+
+<span>
+<i class="dot available"></i>
+Available
+</span>
+
+<span>
+<i class="dot reserved"></i>
+Reserved
+</span>
+
+</div>
+</div>
+
+
 <div class="floor">
-<div class="table four t1">1</div><div class="table four t2">2</div>
-<div class="table t3">3</div><div class="table t4">4</div><div class="table large t5">5</div>
-<div class="table t16">16</div><div class="table t17">17</div><div class="table four t18">18</div>
-<div class="table four t14">14</div><div class="table four t15">15</div>
-<div class="table t10">10</div><div class="table t11">11</div><div class="table t12">12</div>
-<div class="table t8">8</div><div class="table four t7">7</div><div class="table large t9">9</div>
-</div></main></div></div>
 
-<div id="bookingModal" class="modal" onclick="modalBackgroundClick(event)"><div class="modal-card">
-<div class="modal-header"><h2>Reservation Details</h2><button class="close" onclick="closeModal()">×</button></div>
-<div id="bookingDetails"></div><div class="actions">
-<button class="action-button confirmed" onclick="changeSelectedStatus('Confirmed')">Confirmed</button>
-<button class="action-button arrived" onclick="changeSelectedStatus('Arrived')">Arrived</button>
-<button class="action-button late" onclick="changeSelectedStatus('Late')">Late</button>
-<button class="action-button cancel" onclick="cancelSelectedBooking()">Cancel Booking</button>
-</div></div></div>
+<div class="table four t1" data-table="1">
+<span>1</span><small></small>
+</div>
+
+<div class="table four t2" data-table="2">
+<span>2</span><small></small>
+</div>
+
+<div class="table t3" data-table="3">
+<span>3</span><small></small>
+</div>
+
+<div class="table t4" data-table="4">
+<span>4</span><small></small>
+</div>
+
+<div class="table large t5" data-table="5">
+<span>5</span><small></small>
+</div>
+
+<div class="table t16" data-table="16">
+<span>16</span><small></small>
+</div>
+
+<div class="table t17" data-table="17">
+<span>17</span><small></small>
+</div>
+
+<div class="table four t18" data-table="18">
+<span>18</span><small></small>
+</div>
+
+<div class="table four t14" data-table="14">
+<span>14</span><small></small>
+</div>
+
+<div class="table four t15" data-table="15">
+<span>15</span><small></small>
+</div>
+
+<div class="table t10" data-table="10">
+<span>10</span><small></small>
+</div>
+
+<div class="table t11" data-table="11">
+<span>11</span><small></small>
+</div>
+
+<div class="table t12" data-table="12">
+<span>12</span><small></small>
+</div>
+
+<div class="table t8" data-table="8">
+<span>8</span><small></small>
+</div>
+
+<div class="table four t7" data-table="7">
+<span>7</span><small></small>
+</div>
+
+<div class="table large t9" data-table="9">
+<span>9</span><small></small>
+</div>
+
+</div>
+
+</main>
+</div>
+</div>
+
+
+<!-- BOOKING DETAILS -->
+
+<div
+id="bookingModal"
+class="modal"
+onclick="modalBackgroundClick(event)">
+
+<div class="modal-card">
+
+<div class="modal-header">
+
+<h2>Reservation Details</h2>
+
+<button
+class="close"
+onclick="closeModal()">
+×
+</button>
+
+</div>
+
+<div id="bookingDetails"></div>
+
+<div class="actions">
+
+<button
+class="action-button confirmed"
+onclick="changeSelectedStatus('Confirmed')">
+Confirmed
+</button>
+
+<button
+class="action-button arrived"
+onclick="changeSelectedStatus('Arrived')">
+Arrived
+</button>
+
+<button
+class="action-button late"
+onclick="changeSelectedStatus('Late')">
+Late
+</button>
+
+<button
+class="action-button cancel"
+onclick="cancelSelectedBooking()">
+Cancel Booking
+</button>
+
+</div>
+
+</div>
+</div>
+
 
 <script>
-const SUPABASE_URL="https://uxyedciaiesddyeibqkt.supabase.co";
-const SUPABASE_KEY="sb_publishable_TG1Ym_DZwv7iKg2fZEIpog_XwrvTc0R";
-let accessToken=sessionStorage.getItem("haven_admin_token"),currentBookings=[],selectedBooking=null;
+
+const SUPABASE_URL =
+"https://uxyedciaiesddyeibqkt.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_TG1Ym_DZwv7iKg2fZEIpog_XwrvTc0R";
+
+let accessToken =
+sessionStorage.getItem("haven_admin_token");
+
+let currentBookings = [];
+let selectedBooking = null;
+
+
+/* LOGIN */
 
 async function login(){
- const email=document.getElementById("loginEmail").value.trim(),password=document.getElementById("loginPassword").value,message=document.getElementById("loginMessage");
+
+ const email =
+ document.getElementById("loginEmail").value.trim();
+
+ const password =
+ document.getElementById("loginPassword").value;
+
+ const message =
+ document.getElementById("loginMessage");
+
  message.textContent="Signing in...";
+
  try{
-  const response=await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`,{method:"POST",headers:{"apikey":SUPABASE_KEY,"Content-Type":"application/json"},body:JSON.stringify({email,password})});
+
+  const response = await fetch(
+   `${SUPABASE_URL}/auth/v1/token?grant_type=password`,
+   {
+    method:"POST",
+    headers:{
+     "apikey":SUPABASE_KEY,
+     "Content-Type":"application/json"
+    },
+    body:JSON.stringify({
+     email,
+     password
+    })
+   }
+  );
+
   const data=await response.json();
-  if(!response.ok) throw new Error(data.error_description||data.msg||"Login failed.");
-  accessToken=data.access_token;sessionStorage.setItem("haven_admin_token",accessToken);showAdmin();
- }catch(error){message.textContent=error.message}
+
+  if(!response.ok){
+   throw new Error(
+    data.error_description ||
+    data.msg ||
+    "Login failed."
+   );
+  }
+
+  accessToken=data.access_token;
+
+  sessionStorage.setItem(
+   "haven_admin_token",
+   accessToken
+  );
+
+  showAdmin();
+
+ }catch(error){
+
+  message.textContent=error.message;
+
+ }
+
 }
-function showAdmin(){document.getElementById("loginScreen").style.display="none";document.getElementById("adminApp").style.display="block";goToday()}
-function logout(){accessToken=null;sessionStorage.removeItem("haven_admin_token");document.getElementById("adminApp").style.display="none";document.getElementById("loginScreen").style.display="flex"}
-function getLocalDateString(date){return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}-${String(date.getDate()).padStart(2,"0")}`}
-function goToday(){document.getElementById("bookingDate").value=getLocalDateString(new Date());loadBookings()}
-function changeDate(amount){const picker=document.getElementById("bookingDate");if(!picker.value){goToday();return}const p=picker.value.split("-"),d=new Date(+p[0],+p[1]-1,+p[2]);d.setDate(d.getDate()+amount);picker.value=getLocalDateString(d);loadBookings()}
+
+
+/* ADMIN */
+
+function showAdmin(){
+
+ document.getElementById("loginScreen")
+ .style.display="none";
+
+ document.getElementById("adminApp")
+ .style.display="block";
+
+ goToday();
+
+}
+
+
+function logout(){
+
+ accessToken=null;
+
+ sessionStorage.removeItem(
+  "haven_admin_token"
+ );
+
+ document.getElementById("adminApp")
+ .style.display="none";
+
+ document.getElementById("loginScreen")
+ .style.display="flex";
+
+}
+
+
+function getLocalDateString(date){
+
+ return `${date.getFullYear()}-${String(
+ date.getMonth()+1
+ ).padStart(2,"0")}-${String(
+ date.getDate()
+ ).padStart(2,"0")}`;
+
+}
+
+
+function goToday(){
+
+ document.getElementById(
+ "bookingDate"
+ ).value=getLocalDateString(new Date());
+
+ loadBookings();
+
+}
+
+
+function changeDate(amount){
+
+ const picker =
+ document.getElementById("bookingDate");
+
+ if(!picker.value){
+  goToday();
+  return;
+ }
+
+ const p=picker.value.split("-");
+
+ const d=new Date(
+  +p[0],
+  +p[1]-1,
+  +p[2]
+ );
+
+ d.setDate(
+  d.getDate()+amount
+ );
+
+ picker.value=getLocalDateString(d);
+
+ loadBookings();
+
+}
+
+
+/* LOAD BOOKINGS */
 
 async function loadBookings(){
+
  if(!accessToken)return;
- const date=document.getElementById("bookingDate").value,list=document.getElementById("bookingList");
- list.innerHTML='<div class="empty-message">Loading...</div>';
+
+ const date =
+ document.getElementById(
+ "bookingDate"
+ ).value;
+
+ const list =
+ document.getElementById(
+ "bookingList"
+ );
+
+ list.innerHTML =
+ '<div class="empty-message">Loading...</div>';
+
  try{
-  const response=await fetch(`${SUPABASE_URL}/rest/v1/bookings?select=*&booking_date=eq.${date}&order=booking_time.asc`,{headers:{"apikey":SUPABASE_KEY,"Authorization":`Bearer ${accessToken}`}});
-  if(!response.ok){if(response.status===401||response.status===403){logout();throw new Error("Session expired. Please login again.")}throw new Error("Could not load reservations.")}
-  currentBookings=await response.json();renderBookings();
- }catch(error){list.innerHTML=`<div class="empty-message">${escapeHtml(error.message)}</div>`}
+
+  const response=await fetch(
+   `${SUPABASE_URL}/rest/v1/bookings?select=*&booking_date=eq.${date}&order=booking_time.asc`,
+   {
+    headers:{
+     "apikey":SUPABASE_KEY,
+     "Authorization":
+     `Bearer ${accessToken}`
+    }
+   }
+  );
+
+  if(!response.ok){
+
+   if(
+    response.status===401 ||
+    response.status===403
+   ){
+    logout();
+    throw new Error(
+     "Session expired. Please login again."
+    );
+   }
+
+   throw new Error(
+    "Could not load reservations."
+   );
+
+  }
+
+  currentBookings =
+  await response.json();
+
+  renderBookings();
+
+ }catch(error){
+
+  list.innerHTML =
+  `<div class="empty-message">
+  ${escapeHtml(error.message)}
+  </div>`;
+
+ }
+
 }
-function renderBookings(){
- const list=document.getElementById("bookingList");list.innerHTML="";
- const active=currentBookings.filter(b=>String(b.status||"").toLowerCase()!=="cancelled");
- document.getElementById("bookingCount").textContent=active.length;
- document.getElementById("guestCount").textContent=active.reduce((n,b)=>n+Number(b.guests||0),0);
- if(!currentBookings.length){list.innerHTML='<div class="empty-message">No reservations for this day.</div>';return}
- currentBookings.forEach(booking=>{
-  const cancelled=String(booking.status||"").toLowerCase()==="cancelled",card=document.createElement("div");
-  card.className="booking-card"+(cancelled?" cancelled":"");card.onclick=()=>openBooking(booking);
-  const top=document.createElement("div");top.className="booking-top";
-  const time=document.createElement("div");time.className="booking-time";time.textContent=String(booking.booking_time||"").substring(0,5)||"--:--";
-  const guests=document.createElement("div");guests.className="booking-guests";guests.textContent=`${booking.guests||0} Guests`;top.append(time,guests);
-  const name=document.createElement("div");name.className="booking-name";name.textContent=booking.name||"Guest";card.append(top,name);
-  if(booking.notes){const note=document.createElement("div");note.className="booking-note";note.textContent="★ "+booking.notes;card.appendChild(note)}
-  const status=document.createElement("div");status.className="booking-status";status.textContent=booking.status||"Confirmed";card.appendChild(status);list.appendChild(card);
+
+
+/* FILTER */
+
+function filteredBookings(){
+
+ const service =
+ document.getElementById(
+ "serviceFilter"
+ ).value;
+
+ if(service==="all")
+  return currentBookings;
+
+ return currentBookings.filter(b=>{
+
+  const hour =
+  Number(
+   String(
+    b.booking_time || "00:00"
+   ).substring(0,2)
+  );
+
+  if(service==="lunch")
+   return hour < 16;
+
+  return hour >= 16;
+
  });
+
 }
+
+
+/* RENDER */
+
+function renderBookings(){
+
+ const list =
+ document.getElementById(
+ "bookingList"
+ );
+
+ list.innerHTML="";
+
+ const bookings =
+ filteredBookings();
+
+ const active =
+ bookings.filter(
+  b =>
+  String(
+   b.status || ""
+  ).toLowerCase()
+  !== "cancelled"
+ );
+
+ document.getElementById(
+ "bookingCount"
+ ).textContent=active.length;
+
+ document.getElementById(
+ "guestCount"
+ ).textContent =
+ active.reduce(
+  (n,b)=>n+Number(b.guests||0),
+  0
+ );
+
+ resetFloor();
+
+ active.forEach(
+  markBookingOnFloor
+ );
+
+ if(!bookings.length){
+
+  list.innerHTML =
+  '<div class="empty-message">No reservations for this day.</div>';
+
+  return;
+
+ }
+
+ bookings.forEach(booking=>{
+
+  const cancelled =
+  String(
+   booking.status || ""
+  ).toLowerCase()
+  === "cancelled";
+
+  const card =
+  document.createElement("div");
+
+  card.className =
+  "booking-card" +
+  (cancelled ?
+   " cancelled" :
+   "");
+
+  card.onclick =
+  ()=>openBooking(booking);
+
+
+  const top =
+  document.createElement("div");
+
+  top.className =
+  "booking-top";
+
+
+  const time =
+  document.createElement("div");
+
+  time.className =
+  "booking-time";
+
+  time.textContent =
+  formatTime(
+   booking.booking_time
+  );
+
+
+  const guests =
+  document.createElement("div");
+
+  guests.className =
+  "booking-guests";
+
+  guests.textContent =
+  `${booking.guests || 0} Guests`;
+
+  top.append(
+   time,
+   guests
+  );
+
+
+  const name =
+  document.createElement("div");
+
+  name.className =
+  "booking-name";
+
+  name.textContent =
+  booking.name || "Guest";
+
+
+  card.append(
+   top,
+   name
+  );
+
+
+  const tables =
+  normalizeTables(
+   booking.assigned_tables
+  );
+
+  if(tables.length){
+
+   const tableText =
+   document.createElement("div");
+
+   tableText.className =
+   "booking-table";
+
+   tableText.textContent =
+   "Table" +
+   (tables.length>1 ? "s " : " ") +
+   tables.join(" + ");
+
+   card.appendChild(
+    tableText
+   );
+
+  }
+
+
+  if(
+   booking.special_occasion
+  ){
+
+   const occasion =
+   document.createElement("div");
+
+   occasion.className =
+   "booking-note";
+
+   occasion.textContent =
+   "★ " +
+   booking.special_occasion;
+
+   card.appendChild(
+    occasion
+   );
+
+  }
+
+
+  if(booking.notes){
+
+   const note =
+   document.createElement("div");
+
+   note.className =
+   "booking-note";
+
+   note.textContent =
+   booking.notes;
+
+   card.appendChild(note);
+
+  }
+
+
+  const status =
+  document.createElement("div");
+
+  status.className =
+  "booking-status";
+
+  status.textContent =
+  booking.status ||
+  "Confirmed";
+
+  card.appendChild(status);
+
+  list.appendChild(card);
+
+ });
+
+}
+
+
+/* FLOOR */
+
+function resetFloor(){
+
+ document
+ .querySelectorAll(".table")
+ .forEach(table=>{
+
+  table.classList.remove(
+   "reserved"
+  );
+
+  table.onclick=null;
+
+  const small =
+  table.querySelector("small");
+
+  if(small)
+   small.textContent="";
+
+ });
+
+}
+
+
+function markBookingOnFloor(
+ booking
+){
+
+ const tables =
+ normalizeTables(
+  booking.assigned_tables
+ );
+
+ tables.forEach(number=>{
+
+  const table =
+  document.querySelector(
+   `.table[data-table="${number}"]`
+  );
+
+  if(!table)return;
+
+  table.classList.add(
+   "reserved"
+  );
+
+  const small =
+  table.querySelector("small");
+
+  if(small){
+
+   small.textContent =
+   `${formatTime(
+    booking.booking_time
+   )} · ${booking.guests}`;
+
+  }
+
+  table.onclick =
+  ()=>openBooking(booking);
+
+ });
+
+}
+
+
+function normalizeTables(value){
+
+ if(Array.isArray(value))
+  return value.map(Number);
+
+ if(!value)
+  return [];
+
+ if(typeof value==="string"){
+
+  return value
+  .replace(/[{}\[\]]/g,"")
+  .split(",")
+  .map(x=>Number(x.trim()))
+  .filter(Number.isFinite);
+
+ }
+
+ return [];
+
+}
+
+
+/* BOOKING DETAILS */
+
 function openBooking(booking){
- selectedBooking=booking;const details=document.getElementById("bookingDetails");details.innerHTML="";
- [["Guest",booking.name||"-"],["Date",booking.booking_date||"-"],["Time",String(booking.booking_time||"-").substring(0,5)],["Guests",booking.guests||"-"],["Phone",booking.phone||"-"],["Email",booking.email||"-"],["Special Request / Notes",booking.notes||"-"],["Status",booking.status||"Confirmed"]].forEach(x=>addDetail(details,x[0],x[1]));
- document.getElementById("bookingModal").classList.add("open");
+
+ selectedBooking=booking;
+
+ const details =
+ document.getElementById(
+ "bookingDetails"
+ );
+
+ details.innerHTML="";
+
+ const tables =
+ normalizeTables(
+  booking.assigned_tables
+ );
+
+ addDetail(
+  details,
+  "Guest",
+  booking.name || "-"
+ );
+
+ addDetail(
+  details,
+  "Date",
+  booking.booking_date || "-"
+ );
+
+ addDetail(
+  details,
+  "Time",
+  formatTime(
+   booking.booking_time
+  )
+ );
+
+ addDetail(
+  details,
+  "End Time",
+  booking.end_time ?
+  formatTime(
+   booking.end_time
+  ) : "-"
+ );
+
+ addDetail(
+  details,
+  "Guests",
+  booking.guests || "-"
+ );
+
+ addDetail(
+  details,
+  "Assigned Table(s)",
+  tables.length ?
+  tables.join(" + ") :
+  "-"
+ );
+
+ addDetail(
+  details,
+  "Seating Duration",
+  booking.duration_minutes ?
+  formatDuration(
+   booking.duration_minutes
+  ) :
+  "-"
+ );
+
+ addDetail(
+  details,
+  "Phone",
+  booking.phone || "-"
+ );
+
+ addDetail(
+  details,
+  "Email",
+  booking.email || "-"
+ );
+
+ addDetail(
+  details,
+  "Special Occasion",
+  booking.special_occasion ||
+  "-"
+ );
+
+ addDetail(
+  details,
+  "Notes",
+  booking.notes || "-"
+ );
+
+ addDetail(
+  details,
+  "Status",
+  booking.status ||
+  "Confirmed"
+ );
+
+ document.getElementById(
+ "bookingModal"
+ ).classList.add("open");
+
 }
-function addDetail(container,label,value){const row=document.createElement("div");row.className="detail-row";const l=document.createElement("div");l.className="detail-label";l.textContent=label;const v=document.createElement("div");v.className="detail-value";v.textContent=value;row.append(l,v);container.appendChild(row)}
-function closeModal(){document.getElementById("bookingModal").classList.remove("open");selectedBooking=null}
-function modalBackgroundClick(event){if(event.target.id==="bookingModal")closeModal()}
-async function changeSelectedStatus(status){if(selectedBooking)await updateStatus(selectedBooking.id,status)}
-async function updateStatus(id,status){
+
+
+function addDetail(
+ container,
+ label,
+ value
+){
+
+ const row =
+ document.createElement("div");
+
+ row.className =
+ "detail-row";
+
+
+ const l =
+ document.createElement("div");
+
+ l.className =
+ "detail-label";
+
+ l.textContent=label;
+
+
+ const v =
+ document.createElement("div");
+
+ v.className =
+ "detail-value";
+
+ v.textContent=value;
+
+
+ row.append(l,v);
+
+ container.appendChild(row);
+
+}
+
+
+function closeModal(){
+
+ document.getElementById(
+ "bookingModal"
+ ).classList.remove("open");
+
+ selectedBooking=null;
+
+}
+
+
+function modalBackgroundClick(
+ event
+){
+
+ if(
+  event.target.id ===
+  "bookingModal"
+ )
+ closeModal();
+
+}
+
+
+/* STATUS */
+
+async function changeSelectedStatus(
+ status
+){
+
+ if(selectedBooking)
+  await updateStatus(
+   selectedBooking.id,
+   status
+  );
+
+}
+
+
+async function updateStatus(
+ id,
+ status
+){
+
  try{
-  const response=await fetch(`${SUPABASE_URL}/rest/v1/bookings?id=eq.${encodeURIComponent(id)}`,{method:"PATCH",headers:{"apikey":SUPABASE_KEY,"Authorization":`Bearer ${accessToken}`,"Content-Type":"application/json","Prefer":"return=minimal"},body:JSON.stringify({status})});
-  if(!response.ok)throw new Error("Reservation could not be updated.");
-  closeModal();await loadBookings();
- }catch(error){alert(error.message)}
+
+  const updateData={
+   status:status
+  };
+
+  if(
+   status.toLowerCase()
+   === "cancelled"
+  ){
+
+   updateData.cancelled_at =
+   new Date().toISOString();
+
+  }
+
+  const response=await fetch(
+   `${SUPABASE_URL}/rest/v1/bookings?id=eq.${encodeURIComponent(id)}`,
+   {
+    method:"PATCH",
+    headers:{
+     "apikey":SUPABASE_KEY,
+     "Authorization":
+     `Bearer ${accessToken}`,
+     "Content-Type":
+     "application/json",
+     "Prefer":
+     "return=minimal"
+    },
+    body:JSON.stringify(
+     updateData
+    )
+   }
+  );
+
+  if(!response.ok){
+
+   const message =
+   await response.text();
+
+   throw new Error(
+    message ||
+    "Reservation could not be updated."
+   );
+
+  }
+
+  closeModal();
+
+  await loadBookings();
+
+ }catch(error){
+
+  alert(error.message);
+
+ }
+
 }
-async function cancelSelectedBooking(){if(!selectedBooking)return;if(confirm("Cancel this reservation?\n\nThe reservation will remain in history."))await updateStatus(selectedBooking.id,"Cancelled")}
-function escapeHtml(value){return String(value).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
-if(accessToken){document.getElementById("loginScreen").style.display="none";document.getElementById("adminApp").style.display="block";goToday()}
-setInterval(()=>{if(accessToken)loadBookings()},30000);
+
+
+async function cancelSelectedBooking(){
+
+ if(!selectedBooking)
+  return;
+
+ const name =
+ selectedBooking.name ||
+ "this guest";
+
+ if(
+  confirm(
+   `Cancel reservation for ${name}?\n\nThe reservation will remain in history and its table will become available.`
+  )
+ ){
+
+  await updateStatus(
+   selectedBooking.id,
+   "Cancelled"
+  );
+
+ }
+
+}
+
+
+/* HELPERS */
+
+function formatTime(value){
+
+ if(!value)
+  return "--:--";
+
+ return String(value)
+ .substring(0,5);
+
+}
+
+
+function formatDuration(minutes){
+
+ const m=Number(minutes);
+
+ if(!m)
+  return "-";
+
+ const hours =
+ Math.floor(m/60);
+
+ const mins =
+ m%60;
+
+ if(!mins)
+  return `${hours} hours`;
+
+ return `${hours}h ${mins}m`;
+
+}
+
+
+function escapeHtml(value){
+
+ return String(value)
+ .replaceAll("&","&amp;")
+ .replaceAll("<","&lt;")
+ .replaceAll(">","&gt;")
+ .replaceAll('"',"&quot;")
+ .replaceAll("'","&#039;");
+
+}
+
+
+/* EXISTING SESSION */
+
+if(accessToken){
+
+ document.getElementById(
+ "loginScreen"
+ ).style.display="none";
+
+ document.getElementById(
+ "adminApp"
+ ).style.display="block";
+
+ goToday();
+
+}
+
+
+/* AUTO REFRESH */
+
+setInterval(()=>{
+
+ if(accessToken)
+  loadBookings();
+
+},30000);
+
 </script>
+
 </body>
 </html>
