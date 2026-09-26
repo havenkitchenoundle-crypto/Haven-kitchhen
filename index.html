@@ -1089,13 +1089,9 @@ async function confirmBooking(event) {
 
     if (!booked) {
       if (Number(guests) >= 10) {
-    alert(
-        "HAVEN KITCHEN\n\n" +
-        "For bookings of 10 guests or more, please contact us directly.\n\n" +
-        "Tel: 01832 851123"
-    );
+    document.getElementById("havenPopup").style.display = "flex";
     return;
-      }
+        }
   const nearbyTimes = await getNearbyAvailableTimes(date, time, guests);
 
   const times = nearbyTimes
@@ -1141,6 +1137,66 @@ return;
 }
 
 </script>
+<!-- HAVEN KITCHEN POPUP -->
+<div id="havenPopup" style="
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.78);
+    z-index:99999;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+">
+    <div style="
+        width:100%;
+        max-width:420px;
+        background:#111;
+        border:1px solid #c99a45;
+        padding:35px 25px;
+        text-align:center;
+        color:#f4eee2;
+    ">
+        <h2 style="
+            color:#c99a45;
+            font-family:Georgia,serif;
+            margin:0 0 20px;
+            font-size:28px;
+        ">
+            HAVEN KITCHEN
+        </h2>
 
+        <p style="
+            font-size:17px;
+            line-height:1.6;
+            margin-bottom:25px;
+        ">
+            For bookings of 10 guests or more, please contact us directly.
+        </p>
+
+        <a href="tel:01832851123" style="
+            display:block;
+            background:#c99a45;
+            color:#000;
+            text-decoration:none;
+            padding:15px;
+            margin-bottom:12px;
+            font-weight:bold;
+        ">
+            CALL US · 01832 851123
+        </a>
+
+        <button onclick="document.getElementById('havenPopup').style.display='none'" style="
+            width:100%;
+            background:transparent;
+            color:#f4eee2;
+            border:1px solid #555;
+            padding:14px;
+            font-weight:bold;
+        ">
+            CLOSE
+        </button>
+    </div>
+</div>
 </body>
 </html>
