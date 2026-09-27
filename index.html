@@ -1075,7 +1075,11 @@ async function confirmBooking(event) {
 
   const email =
     document.getElementById("email").value;
-
+// 10+ guests after 16:00 must contact Haven Kitchen
+if (Number(guests) >= 10 && time >= "16:00") {
+  document.getElementById("havenPopup").style.display = "flex";
+  return;
+}
   try {
     const booked = await createBookingSafe(
       name,
@@ -1088,10 +1092,7 @@ async function confirmBooking(event) {
     );
 
     if (!booked) {
-      if (Number(guests) >= 10) {
-    document.getElementById("havenPopup").style.display = "flex";
-    return;
-        }
+      
   const nearbyTimes = await getNearbyAvailableTimes(date, time, guests);
 
   const times = nearbyTimes
