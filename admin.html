@@ -1703,9 +1703,7 @@ setInterval(()=>{
       <input id="manualPhone" type="tel" required
         style="width:100%;padding:12px;margin:6px 0 14px;">
 
-      <label>Email</label>
-      <input id="manualEmail" type="email"
-        style="width:100%;padding:12px;margin:6px 0 14px;">
+      
 
       <label>Date</label>
       <input id="manualDate" type="date" required
@@ -1776,7 +1774,7 @@ document.getElementById("manualBookingForm").addEventListener("submit", async fu
   const booking = {
     p_name: document.getElementById("manualName").value.trim(),
     p_phone: document.getElementById("manualPhone").value.trim(),
-    p_email: document.getElementById("manualEmail").value.trim(),
+    p_email: "",
     p_date: document.getElementById("manualDate").value,
     p_time: document.getElementById("manualTime").value,
     p_guests: Number(document.getElementById("manualGuests").value),
