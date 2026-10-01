@@ -572,7 +572,7 @@ onchange="renderBookings()">
 
 <button
 class="new-booking"
-onclick="alert('Manual booking form will be added next.')">
+onclick="openNewBookingModal()"
 + New Booking
 </button>
 
@@ -1669,6 +1669,162 @@ setInterval(()=>{
 },30000);
 
 </script>
+<!-- NEW BOOKING MODAL -->
+<div id="newBookingModal" style="
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.78);
+  z-index:99999;
+  padding:20px;
+  overflow:auto;
+">
+  <div style="
+    max-width:500px;
+    margin:40px auto;
+    background:#111;
+    border:1px solid #444;
+    border-radius:14px;
+    padding:22px;
+    color:#fff;
+  ">
 
+    <h2 style="margin-top:0;color:#c9a34e;">
+      New Booking
+    </h2>
+
+    <form id="manualBookingForm">
+
+      <label>Guest Name</label>
+      <input id="manualName" type="text" required
+        style="width:100%;padding:12px;margin:6px 0 14px;">
+
+      <label>Phone</label>
+      <input id="manualPhone" type="tel" required
+        style="width:100%;padding:12px;margin:6px 0 14px;">
+
+      <label>Email</label>
+      <input id="manualEmail" type="email"
+        style="width:100%;padding:12px;margin:6px 0 14px;">
+
+      <label>Date</label>
+      <input id="manualDate" type="date" required
+        style="width:100%;padding:12px;margin:6px 0 14px;">
+
+      <label>Time</label>
+      <input id="manualTime" type="time" required
+        style="width:100%;padding:12px;margin:6px 0 14px;">
+
+      <label>Guests</label>
+      <input id="manualGuests" type="number" min="1" required
+        style="width:100%;padding:12px;margin:6px 0 14px;">
+
+      <label>Notes</label>
+      <textarea id="manualNotes" rows="3"
+        style="width:100%;padding:12px;margin:6px 0 18px;"></textarea>
+
+      <div style="display:flex;gap:10px;">
+
+        <button type="button"
+          onclick="closeNewBookingModal()"
+          style="flex:1;padding:13px;">
+          Cancel
+        </button>
+
+        <button type="submit"
+          style="
+            flex:1;
+            padding:13px;
+            background:#c9a34e;
+            color:#111;
+            font-weight:bold;
+            border:0;
+            border-radius:6px;
+          ">
+          Save Booking
+        </button>
+
+      </div>
+
+      <div id="manualBookingMessage"
+        style="margin-top:15px;"></div>
+
+    </form>
+  </div>
+</div>
+
+<script>
+function openNewBookingModal() {
+  document.getElementById("newBookingModal").style.display = "block";
+
+  const selectedDate = document.getElementById("datePicker");
+  if (selectedDate && selectedDate.value) {
+    document.getElementById("manualDate").value = selectedDate.value;
+  }
+}
+
+function closeNewBookingModal() {
+  document.getElementById("newBookingModal").style.display = "none";
+}
+
+document.getElementById("manualBookingForm").addEventListener("submit", async function(e) {
+  e.preventDefault();
+
+  const message = document.getElementById("manualBookingMessage");
+  const submitButton = this.querySelector('button[type="submit"]');
+
+  const booking = {
+    p_name: document.getElementById("manualName").value.trim(),
+    p_phone: document.getElementById("manualPhone").value.trim(),
+    p_email: document.getElementById("manualEmail").value.trim(),
+    p_date: document.getElementById("manualDate").value,
+    p_time: document.getElementById("manualTime").value,
+    p_guests: Number(document.getElementById("manualGuests").value),
+    p_notes: document.getElementById("manualNotes").value.trim()
+  };
+
+  try {
+    submitButton.disabled = true;
+    submitButton.textContent = "Saving...";
+    message.textContent = "";
+
+    const response = await fetch(
+      `${SUPABASE_URL}/rest/v1/rpc/create_booking_safe`,
+      {
+        method: "POST",
+        headers: {
+          "apikey": SUPABASE_KEY,
+          "Authorization": `Bearer ${SUPABASE_KEY}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(booking)
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(errorText);
+    }
+
+    message.style.color = "#7CFC98";
+    message.textContent = "Booking saved successfully.";
+
+    this.reset();
+
+    setTimeout(() => {
+      closeNewBookingModal();
+      location.reload();
+    }, 700);
+
+  } catch (error) {
+    console.error(error);
+    message.style.color = "#ff7777";
+    message.textContent = "Could not save booking: " + error.message;
+  } finally {
+    submitButton.disabled = false;
+    submitButton.textContent = "Save Booking";
+  }
+});
+</script>
 </body>
 </html>
