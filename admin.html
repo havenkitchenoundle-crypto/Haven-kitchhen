@@ -615,7 +615,12 @@ Logout
 id="bookingList"
 class="booking-list">
 </div>
+<h2 style="margin-top:35px;">Seated</h2>
 
+<div
+  id="seatedList"
+  class="booking-list">
+</div>
 </aside>
 
 
@@ -1041,14 +1046,14 @@ function renderBookings(){
  const bookings =
  filteredBookings();
 
- const active =
- bookings.filter(
-  b =>
-  String(
-   b.status || ""
-  ).toLowerCase()
-  !== "cancelled"
- );
+ const active = bookings.filter(b => {
+  const status = String(b.status || "").toLowerCase();
+  return status !== "cancelled" && status !== "arrived";
+});
+
+const seated = bookings.filter(b =>
+  String(b.status || "").toLowerCase() === "arrived"
+);
 
  document.getElementById(
  "bookingCount"
@@ -1078,7 +1083,6 @@ function renderBookings(){
  }
 
  bookings.forEach(booking=>{
-
   const cancelled =
   String(
    booking.status || ""
@@ -1222,8 +1226,13 @@ function renderBookings(){
 
   card.appendChild(status);
 
-  list.appendChild(card);
+  const seatedList = document.getElementById("seatedList");
 
+if (String(booking.status || "").toLowerCase() === "arrived") {
+  seatedList.appendChild(card);
+} else {
+  list.appendChild(card);
+}
  });
 
 }
