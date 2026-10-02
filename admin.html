@@ -1042,7 +1042,8 @@ function renderBookings(){
  );
 
  list.innerHTML="";
-
+const seatedList = document.getElementById("seatedList");
+seatedList.innerHTML = "";
  const bookings =
  filteredBookings();
 
@@ -1051,9 +1052,9 @@ function renderBookings(){
   return status !== "cancelled" && status !== "arrived";
 });
 
-const seated = bookings.filter(b =>
-  String(b.status || "").toLowerCase() === "arrived"
-);
+const seated = bookings.filter(b => {
+  return String(b.status || "").toLowerCase() === "arrived";
+});
 
  document.getElementById(
  "bookingCount"
@@ -1226,7 +1227,7 @@ const seated = bookings.filter(b =>
 
   card.appendChild(status);
 
-  const seatedList = document.getElementById("seatedList");
+  
 
 if (String(booking.status || "").toLowerCase() === "arrived") {
   seatedList.appendChild(card);
