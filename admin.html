@@ -743,7 +743,61 @@ onclick="closeModal()">
 </div>
 
 <div id="bookingDetails"></div>
+<div id="editReservation" style="
+  margin-top:18px;
+  padding-top:18px;
+  border-top:1px solid #303831;
+">
 
+  <h3 style="color:#c99a45;">
+    Edit Reservation
+  </h3>
+
+  <label>Date</label>
+  <input
+    id="editBookingDate"
+    type="date"
+    style="width:100%;padding:11px;margin:6px 0 12px;"
+  >
+
+  <label>Time</label>
+  <input
+    id="editBookingTime"
+    type="time"
+    style="width:100%;padding:11px;margin:6px 0 12px;"
+  >
+
+  <label>Guests</label>
+  <input
+    id="editBookingGuests"
+    type="number"
+    min="1"
+    style="width:100%;padding:11px;margin:6px 0 12px;"
+  >
+
+  <button
+    type="button"
+    onclick="saveReservationChanges()"
+    style="
+      width:100%;
+      padding:12px;
+      margin-top:5px;
+      background:#c99a45;
+      color:#111;
+      border:0;
+      border-radius:7px;
+      font-weight:bold;
+    "
+  >
+    Save Changes
+  </button>
+
+  <div
+    id="editBookingMessage"
+    style="margin-top:10px;">
+  </div>
+
+</div>
 <div class="actions">
 
 <button
@@ -1431,7 +1485,18 @@ function normalizeTables(value){
 function openBooking(booking){
 
  selectedBooking=booking;
+document.getElementById("editBookingDate").value =
+  booking.booking_date || "";
 
+document.getElementById("editBookingTime").value =
+  booking.booking_time
+    ? String(booking.booking_time).substring(0,5)
+    : "";
+
+document.getElementById("editBookingGuests").value =
+  booking.guests || 1;
+
+document.getElementById("editBookingMessage").textContent = "";
  const details =
  document.getElementById(
  "bookingDetails"
@@ -1573,7 +1638,75 @@ function addDetail(
 
 }
 
+async function saveReservationChanges() {
 
+  if (!selectedBooking) return;
+
+  const message =
+    document.getElementById("editBookingMessage");
+
+  const newDate =
+    document.getElementById("editBookingDate").value;
+
+  const newTime =
+    document.getElementById("editBookingTime").value;
+
+  const newGuests =
+    Number(document.getElementById("editBookingGuests").value);
+
+  if (!newDate || !newTime || !newGuests || newGuests < 1) {
+    message.style.color = "#ff7777";
+    message.textContent = "Please enter a valid date, time and guest count.";
+    return;
+  }
+
+  message.style.color = "#c99a45";
+  message.textContent = "Saving...";
+
+  try {
+
+    const response = await authenticatedFetch(
+      `${SUPABASE_URL}/rest/v1/bookings?id=eq.${encodeURIComponent(selectedBooking.id)}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Prefer": "return=minimal"
+        },
+        body: JSON.stringify({
+          booking_date: newDate,
+          booking_time: newTime,
+          guests: newGuests
+        })
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        errorText || "Reservation could not be updated."
+      );
+    }
+
+    message.style.color = "#7CFC98";
+    message.textContent = "Reservation updated successfully.";
+
+    document.getElementById("bookingDate").value = newDate;
+
+    setTimeout(async () => {
+      closeModal();
+      await loadBookings();
+    }, 500);
+
+  } catch (error) {
+
+    console.error(error);
+
+    message.style.color = "#ff7777";
+    message.textContent =
+      "Could not update reservation: " + error.message;
+  }
+}
 function closeModal(){
 
  document.getElementById(
