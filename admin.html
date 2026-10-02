@@ -784,8 +784,8 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
 "sb_publishable_TG1Ym_DZwv7iKg2fZEIpog_XwrvTc0R";
 
-let accessToken =
-sessionStorage.getItem("haven_admin_token");
+let accessToken = localStorage.getItem("haven_admin_token");
+let refreshToken = localStorage.getItem("haven_admin_refresh_token");
 
 let currentBookings = [];
 let selectedBooking = null;
@@ -833,14 +833,8 @@ async function login(){
    );
   }
 
-  accessToken=data.access_token;
-
-  sessionStorage.setItem(
-   "haven_admin_token",
-   accessToken
-  );
-
-  showAdmin();
+  saveSession(data);
+showAdmin();
 
  }catch(error){
 
@@ -850,7 +844,113 @@ async function login(){
 
 }
 
+function saveSession(data) {
 
+  accessToken = data.access_token;
+
+  if (data.refresh_token) {
+    refreshToken = data.refresh_token;
+  }
+
+  localStorage.setItem(
+    "haven_admin_token",
+    accessToken
+  );
+
+  if (refreshToken) {
+    localStorage.setItem(
+      "haven_admin_refresh_token",
+      refreshToken
+    );
+  }
+}
+
+
+async function refreshSession() {
+
+  if (!refreshToken) {
+    return false;
+  }
+
+  try {
+
+    const response = await fetch(
+      `${SUPABASE_URL}/auth/v1/token?grant_type=refresh_token`,
+      {
+        method: "POST",
+        headers: {
+          "apikey": SUPABASE_KEY,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          refresh_token: refreshToken
+        })
+      }
+    );
+
+    if (!response.ok) {
+      return false;
+    }
+
+    const data = await response.json();
+
+    saveSession(data);
+
+    return true;
+
+  } catch (error) {
+
+    console.error(
+      "Session refresh failed:",
+      error
+    );
+
+    return false;
+  }
+}
+
+
+async function authenticatedFetch(url, options = {}) {
+
+  const headers = {
+    ...(options.headers || {}),
+    "apikey": SUPABASE_KEY,
+    "Authorization": `Bearer ${accessToken}`
+  };
+
+  let response = await fetch(
+    url,
+    {
+      ...options,
+      headers
+    }
+  );
+
+  if (
+    (response.status === 401 ||
+     response.status === 403) &&
+    refreshToken
+  ) {
+
+    const refreshed = await refreshSession();
+
+    if (refreshed) {
+
+      headers["Authorization"] =
+        `Bearer ${accessToken}`;
+
+      response = await fetch(
+        url,
+        {
+          ...options,
+          headers
+        }
+      );
+    }
+  }
+
+  return response;
+  }
 /* ADMIN */
 
 function showAdmin(){
@@ -866,20 +966,24 @@ function showAdmin(){
 }
 
 
-function logout(){
+function logout() {
 
- accessToken=null;
+  accessToken = null;
+  refreshToken = null;
 
- sessionStorage.removeItem(
-  "haven_admin_token"
- );
+  localStorage.removeItem(
+    "haven_admin_token"
+  );
 
- document.getElementById("adminApp")
- .style.display="none";
+  localStorage.removeItem(
+    "haven_admin_refresh_token"
+  );
 
- document.getElementById("loginScreen")
- .style.display="flex";
+  document.getElementById("adminApp")
+    .style.display = "none";
 
+  document.getElementById("loginScreen")
+    .style.display = "flex";
 }
 
 
@@ -955,16 +1059,9 @@ async function loadBookings(){
 
  try{
 
-  const response=await fetch(
-   `${SUPABASE_URL}/rest/v1/bookings?select=*&booking_date=eq.${date}&order=booking_time.asc`,
-   {
-    headers:{
-     "apikey":SUPABASE_KEY,
-     "Authorization":
-     `Bearer ${accessToken}`
-    }
-   }
-  );
+  const response = await authenticatedFetch(
+  `${SUPABASE_URL}/rest/v1/bookings?select=*&booking_date=eq.${date}&order=booking_time.asc`
+);
 
   if(!response.ok){
 
@@ -1537,24 +1634,18 @@ async function updateStatus(
 
   }
 
-  const response=await fetch(
-   `${SUPABASE_URL}/rest/v1/bookings?id=eq.${encodeURIComponent(id)}`,
-   {
-    method:"PATCH",
-    headers:{
-     "apikey":SUPABASE_KEY,
-     "Authorization":
-     `Bearer ${accessToken}`,
-     "Content-Type":
-     "application/json",
-     "Prefer":
-     "return=minimal"
+  
+  const response = await authenticatedFetch(
+  `${SUPABASE_URL}/rest/v1/bookings?id=eq.${encodeURIComponent(id)}`,
+  {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      "Prefer": "return=minimal"
     },
-    body:JSON.stringify(
-     updateData
-    )
-   }
-  );
+    body: JSON.stringify(updateData)
+  }
+);
 
   if(!response.ok){
 
