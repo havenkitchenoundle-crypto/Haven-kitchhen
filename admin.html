@@ -353,7 +353,15 @@ button{cursor:pointer}
   border-color:#a582d1;
   box-shadow:0 0 15px rgba(118,85,168,.25);
 }
+.table.arrived{
+  background:#2e7d4f;
+  border-color:#62b77a;
+  box-shadow:0 0 15px rgba(46,125,79,.35);
+}
 
+.table.arrived small{
+  display:block;
+}
 .table.reserved small{
   display:block;
 }
@@ -1433,9 +1441,13 @@ function markBookingOnFloor(
 
   if(!table)return;
 
-  table.classList.add(
-   "reserved"
-  );
+  const status = String(booking.status || "").toLowerCase();
+
+if(status === "arrived"){
+  table.classList.add("arrived");
+}else{
+  table.classList.add("reserved");
+}
 
   const small =
   table.querySelector("small");
