@@ -583,7 +583,11 @@ class="new-booking"
 onclick="openNewBookingModal()"
 + New Booking
 </button>
-
+<button
+  class="new-booking"
+  onclick="openWalkInModal()">
+  + Walk In
+</button>
 <button
 class="logout-button"
 onclick="logout()">
@@ -2010,7 +2014,64 @@ setInterval(()=>{
     </form>
   </div>
 </div>
+<!-- WALK IN MODAL -->
+<div id="walkInModal" class="modal">
+  <div class="modal-card">
 
+    <div class="modal-header">
+      <h2>Walk In</h2>
+
+      <button
+        type="button"
+        class="close"
+        onclick="closeWalkInModal()">
+        ×
+      </button>
+    </div>
+
+    <form id="walkInForm">
+<label>Guests</label>
+<input
+  id="walkInGuests"
+  type="number"
+  min="1"
+  required
+  style="width:100%;padding:12px;margin-bottom:15px;"
+>
+      
+      <div style="display:flex;gap:10px;">
+
+        <button
+          type="button"
+          onclick="closeWalkInModal()"
+          style="flex:1;padding:13px;">
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          style="
+            flex:1;
+            padding:13px;
+            background:#c9a34e;
+            color:#111;
+            font-weight:bold;
+            border:0;
+            border-radius:6px;">
+          Seat Walk In
+        </button>
+
+      </div>
+
+      <div
+        id="walkInMessage"
+        style="margin-top:15px;">
+      </div>
+
+    </form>
+
+  </div>
+</div>
 <script>
 function openNewBookingModal() {
   document.getElementById("newBookingModal").style.display = "block";
@@ -2081,6 +2142,85 @@ document.getElementById("manualBookingForm").addEventListener("submit", async fu
   } finally {
     submitButton.disabled = false;
     submitButton.textContent = "Save Booking";
+  }
+});
+  function openWalkInModal() {
+  document.getElementById("walkInModal").style.display = "block";
+}
+
+function closeWalkInModal() {
+  document.getElementById("walkInModal").style.display = "none";
+}
+
+document.getElementById("walkInForm").addEventListener("submit", async function(e) {
+  e.preventDefault();
+
+  const guests = Number(document.getElementById("walkInGuests").value);
+
+  if (!guests || guests < 1) {
+    alert("Please enter number of guests.");
+    return;
+  }
+
+  const now = new Date();
+
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  const hours = String(now.getHours()).padStart(2, "0");
+  const minutes = String(now.getMinutes()).padStart(2, "0");
+
+  const booking = {
+    p_name: "Walk In",
+    p_phone: "",
+    p_email: "",
+    p_date: `${year}-${month}-${day}`,
+    p_time: `${hours}:${minutes}`,
+    p_guests: guests,
+    p_notes: "Walk In"
+  };
+
+  const submitButton = this.querySelector('button[type="submit"]');
+  submitButton.disabled = true;
+  submitButton.textContent = "Seating...";
+
+  try {
+
+    const response = await fetch(
+      `${SUPABASE_URL}/rest/v1/rpc/create_booking_safe`,
+      {
+        method: "POST",
+        headers: {
+          "apikey": SUPABASE_KEY,
+          "Authorization": `Bearer ${SUPABASE_KEY}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(booking)
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(errorText);
+    }
+
+    this.reset();
+    closeWalkInModal();
+
+    setTimeout(() => {
+      location.reload();
+    }, 500);
+
+  } catch (error) {
+
+    console.error(error);
+    alert("Could not create Walk In.");
+
+  } finally {
+
+    submitButton.disabled = false;
+    submitButton.textContent = "Seat Walk In";
+
   }
 });
 </script>
