@@ -1221,7 +1221,7 @@ cancelledList.innerHTML = "";
 
  const active = bookings.filter(b => {
   const status = String(b.status || "").toLowerCase();
-  return status !== "cancelled" && status !== "arrived";
+  return status !== "cancelled";
 });
 
 const seated = bookings.filter(b => {
