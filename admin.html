@@ -1459,12 +1459,14 @@ function markBookingOnFloor(
 
   if(!table)return;
 
-  const status = String(booking.status || "").toLowerCase();
+  const status = String(booking.status || "").trim().toLowerCase();
+
+table.classList.remove("reserved", "arrived", "cancelled");
 
 if(status === "arrived"){
-  table.classList.add("arrived");
+    table.classList.add("arrived");
 }else{
-  table.classList.add("reserved");
+    table.classList.add("reserved");
 }
 
   const small =
