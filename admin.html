@@ -629,6 +629,13 @@ class="booking-list">
   id="seatedList"
   class="booking-list">
 </div>
+
+<h2 style="margin-top:35px;">Cancelled</h2>
+
+<div
+  id="cancelledList"
+  class="booking-list">
+</div>
 </aside>
 
 
@@ -1203,6 +1210,8 @@ function renderBookings(){
  list.innerHTML="";
 const seatedList = document.getElementById("seatedList");
 seatedList.innerHTML = "";
+  const cancelledList = document.getElementById("cancelledList");
+cancelledList.innerHTML = "";
  const bookings =
  filteredBookings();
 
@@ -1388,11 +1397,16 @@ const seated = bookings.filter(b => {
 
   
 
-if (String(booking.status || "").toLowerCase() === "arrived") {
+const currentStatus = String(booking.status || "").toLowerCase();
+
+if (currentStatus === "cancelled") {
+  cancelledList.appendChild(card);
+} else if (currentStatus === "arrived") {
   seatedList.appendChild(card);
 } else {
   list.appendChild(card);
 }
+   
  });
 
 }
