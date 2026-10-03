@@ -303,7 +303,7 @@ button{cursor:pointer}
 .floor{
   position:relative;
   width:850px;
-  height:680px;
+  height:930px;
   min-width:850px;
   background:#111512;
   border:1px solid var(--border);
@@ -316,8 +316,10 @@ button{cursor:pointer}
   position:absolute;
   width:76px;
   height:76px;
-  border:2px solid #566159;
-  background:#1b211c;
+  border:2px solid #d6d6d6;
+background:#ffffff;
+color:#111;
+box-shadow:0 3px 8px rgba(0,0,0,.22);
   border-radius:50%;
   display:flex;
   flex-direction:column;
@@ -349,14 +351,17 @@ button{cursor:pointer}
 }
 
 .table.reserved{
-  background:#4e3b69;
-  border-color:#a582d1;
-  box-shadow:0 0 15px rgba(118,85,168,.25);
+  background:#d94343;
+  color:#fff;
+  border-color:#ff7777;
+  box-shadow:0 0 15px rgba(217,67,67,.30);
 }
+
 .table.arrived{
-  background:#2e7d4f;
-  border-color:#62b77a;
-  box-shadow:0 0 15px rgba(46,125,79,.35);
+  background:#36a85c;
+  color:#fff;
+  border-color:#72d28d;
+  box-shadow:0 0 15px rgba(54,168,92,.35);
 }
 
 .table.arrived small{
@@ -367,34 +372,107 @@ button{cursor:pointer}
 }
 
 .table.cancelled{
-  background:#1b211c;
-  border-color:#566159;
+  background:#ffffff;
+  color:#111;
+  border-color:#d6d6d6;
 }
 
-/* FLOOR POSITIONS */
+<div class="floor">
 
-.t1{left:510px;top:35px}
-.t2{left:620px;top:35px}
+  <!-- TOP -->
 
-.t3{left:730px;top:145px}
-.t4{left:730px;top:245px}
-.t5{left:715px;top:350px}
+<div class="table t1" data-table="1">
+  <span>T1</span><small></small>
+</div>
 
-.t16{left:90px;top:160px}
-.t17{left:190px;top:160px}
-.t18{left:295px;top:160px}
+<div class="table t2" data-table="2">
+  <span>T2</span><small></small>
+</div>
 
-.t14{left:115px;top:285px}
-.t15{left:235px;top:285px}
+<div class="table four t3" data-table="3">
+  <span>T3</span><small></small>
+</div>
 
-.t10{left:85px;top:420px}
-.t11{left:185px;top:420px}
-.t12{left:285px;top:420px}
 
-.t8{left:520px;top:470px}
-.t7{left:630px;top:470px}
+<!-- RIGHT ROW -->
 
-.t9{left:640px;top:575px}
+<div class="table t4" data-table="4">
+  <span>T4</span><small></small>
+</div>
+
+<div class="table four t5" data-table="5">
+  <span>T5</span><small></small>
+</div>
+
+<div class="table t6" data-table="6">
+  <span>T6</span><small></small>
+</div>
+
+<div class="table t7" data-table="7">
+  <span>T7</span><small></small>
+</div>
+
+<div class="table four t8" data-table="8">
+  <span>T8</span><small></small>
+</div>
+
+
+<!-- LEFT PAIRS -->
+
+<div class="table t18" data-table="18">
+  <span>T18</span><small></small>
+</div>
+
+<div class="table t19" data-table="19">
+  <span>T19</span><small></small>
+</div>
+
+<div class="table t17" data-table="17">
+  <span>T17</span><small></small>
+</div>
+
+<div class="table four t16" data-table="16">
+  <span>T16</span><small></small>
+</div>
+
+<div class="table four t15" data-table="15">
+  <span>T15</span><small></small>
+</div>
+
+<div class="table four t14" data-table="14">
+  <span>T14</span><small></small>
+</div>
+
+
+<!-- BOTTOM RIGHT -->
+
+<div class="table four t10" data-table="10">
+  <span>T10</span><small></small>
+</div>
+
+<div class="table t9" data-table="9">
+  <span>T9</span><small></small>
+</div>
+
+<div class="table t12" data-table="12">
+  <span>T12</span><small></small>
+</div>
+
+<div class="table four t11" data-table="11">
+  <span>T11</span><small></small>
+</div>
+  </div>
+
+
+  <div class="table t12" data-table="12">
+    <span>T12</span><small>2 guests</small>
+  </div>
+
+  <div class="table four t11" data-table="11">
+    <span>T11</span><small>4 guests</small>
+  </div>
+
+</div>
 
 /* MODAL */
 
