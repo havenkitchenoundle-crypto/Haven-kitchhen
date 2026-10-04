@@ -653,7 +653,12 @@ class="booking-list">
   id="seatedList"
   class="booking-list">
 </div>
+<h2 style="margin-top:35px;">Finished</h2>
 
+<div
+  id="finishedList"
+  class="booking-list">
+</div>
 <h2 style="margin-top:35px;">Cancelled</h2>
 
 <div
@@ -1256,6 +1261,8 @@ const seatedList = document.getElementById("seatedList");
 seatedList.innerHTML = "";
   const cancelledList = document.getElementById("cancelledList");
 cancelledList.innerHTML = "";
+  const finishedList = document.getElementById("finishedList");
+finishedList.innerHTML = "";
  const bookings =
  filteredBookings();
 
@@ -1445,8 +1452,16 @@ const currentStatus = String(booking.status || "").toLowerCase();
 
 if (currentStatus === "cancelled") {
   cancelledList.appendChild(card);
-} else if (currentStatus === "arrived") {
+
+} else if (currentStatus === "finished") {
+  finishedList.appendChild(card);
+
+} else if (
+  currentStatus === "arrived" ||
+  currentStatus === "seated"
+) {
   seatedList.appendChild(card);
+
 } else {
   list.appendChild(card);
 }
