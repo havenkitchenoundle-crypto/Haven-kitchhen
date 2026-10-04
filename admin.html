@@ -1314,7 +1314,7 @@ cancelledList.innerHTML = "";
 
  const active = bookings.filter(b => {
   const status = String(b.status || "").toLowerCase();
-  return status !== "cancelled";
+  return status !== "cancelled" && status !== "finished";
 });
 
 const seated = bookings.filter(b => {
@@ -1518,8 +1518,9 @@ function resetFloor(){
  .forEach(table=>{
 
   table.classList.remove(
-   "reserved"
-  );
+  "reserved",
+  "arrived"
+);
 
   table.onclick=null;
 
