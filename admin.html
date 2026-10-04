@@ -1275,7 +1275,10 @@ const seated = bookings.filter(b => {
   return String(b.status || "").toLowerCase() === "arrived";
 });
 
- document.getElementById("bookingCount").textContent = bookings.length;
+ document.getElementById("bookingCount").textContent =
+  bookings.filter(b =>
+    String(b.status || "").toLowerCase() !== "cancelled"
+  ).length;
 
  document.getElementById(
  "guestCount"
