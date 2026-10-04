@@ -2014,23 +2014,49 @@ async function cancelSelectedBooking(){
  }
 
 }
-async function finishSelectedBooking(){
+async function finishSelectedBooking() {
 
-  if(!selectedBooking) return;
+  if (!selectedBooking) return;
 
   const name =
-    selectedBooking.name ||
-    "this guest";
+    selectedBooking.name || "this guest";
 
-  if(
-    confirm(
-      `Finish table for ${name}?\n\nThe table will become available again.`
-    )
-  ){
-    await updateStatus(
-      selectedBooking.id,
-      "Finished"
+  if (!confirm(
+    `Finish table for ${name}?\n\nThe table will become available again.`
+  )) {
+    return;
+  }
+
+  try {
+
+    const response = await authenticatedFetch(
+      `${SUPABASE_URL}/rest/v1/rpc/finish_booking`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          p_booking_id: selectedBooking.id
+        })
+      }
     );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        errorText || "Could not finish booking."
+      );
+    }
+
+    closeModal();
+    await loadBookings();
+
+  } catch (error) {
+
+    console.error(error);
+    alert("Could not finish booking: " + error.message);
+
   }
 }
 
