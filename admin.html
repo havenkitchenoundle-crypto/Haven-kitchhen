@@ -1278,17 +1278,14 @@ function filteredBookings(){
 
  return currentBookings.filter(b=>{
 
-  const hour =
-  Number(
-   String(
-    b.booking_time || "00:00"
-   ).substring(0,2)
-  );
+  const bookingTime = String(
+  b.booking_time || "00:00"
+).substring(0,5);
 
-  if(service==="lunch")
-   return hour < 16;
+if(service === "lunch")
+  return bookingTime < "16:30";
 
-  return hour >= 16;
+return bookingTime >= "17:30";
 
  });
 
