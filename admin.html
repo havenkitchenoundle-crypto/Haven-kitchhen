@@ -630,10 +630,7 @@ Logout
 
 <div class="stats">
 
-<div class="stat">
-<strong id="bookingCount">0</strong>
-<span>Bookings</span>
-</div>
+
 
 <div class="stat">
 <strong id="guestCount">0</strong>
@@ -647,19 +644,25 @@ Logout
 id="bookingList"
 class="booking-list">
 </div>
-<h2 style="margin-top:35px;">Seated</h2>
+<h2 style="margin-top:35px;">
+  Seated <span id="seatedGuestCount"></span>
+</h2>
 
 <div
   id="seatedList"
   class="booking-list">
 </div>
-<h2 style="margin-top:35px;">Finished</h2>
+<h2 style="margin-top:35px;">
+  Finished <span id="finishedGuestCount"></span>
+</h2>
 
 <div
   id="finishedList"
   class="booking-list">
 </div>
-<h2 style="margin-top:35px;">Cancelled</h2>
+<h2 style="margin-top:35px;">
+  Cancelled <span id="cancelledGuestCount"></span>
+</h2>
 
 <div
   id="cancelledList"
@@ -1275,19 +1278,34 @@ const seated = bookings.filter(b => {
   return String(b.status || "").toLowerCase() === "arrived";
 });
 
- document.getElementById("bookingCount").textContent =
-  bookings.filter(b =>
-    String(b.status || "").toLowerCase() !== "cancelled"
-  ).length;
 
- document.getElementById(
- "guestCount"
- ).textContent =
- active.reduce(
-  (n,b)=>n+Number(b.guests||0),
-  0
- );
 
+ document.getElementById("guestCount").textContent =
+  bookings
+    .filter(b => String(b.status || "").toLowerCase() !== "cancelled")
+    .reduce(
+      (n, b) => n + Number(b.guests || 0),
+      0
+    );
+document.getElementById("seatedGuestCount").textContent =
+  seated.reduce(
+    (n, b) => n + Number(b.guests || 0),
+    0
+  ) + " Guests";
+  document.getElementById("finishedGuestCount").textContent =
+  bookings
+    .filter(b => String(b.status || "").toLowerCase() === "finished")
+    .reduce(
+      (n, b) => n + Number(b.guests || 0),
+      0
+    ) + " Guests";
+  document.getElementById("cancelledGuestCount").textContent =
+  bookings
+    .filter(b => String(b.status || "").toLowerCase() === "cancelled")
+    .reduce(
+      (n, b) => n + Number(b.guests || 0),
+      0
+    ) + " Guests";
  resetFloor();
 
  active.forEach(
