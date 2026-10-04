@@ -920,7 +920,14 @@ class="action-button cancel"
 onclick="cancelSelectedBooking()">
 Cancel Booking
 </button>
-
+<button
+  id="finishBookingBtn"
+  class="action-button"
+  onclick="finishSelectedBooking()"
+  style="background:#2e9d57;color:white;"
+>
+  Finish
+</button>
 </div>
 
 </div>
@@ -1194,7 +1201,15 @@ function changeDate(amount){
 async function loadBookings(){
 
  if(!accessToken)return;
+// Reset all tables before applying current bookings
+document.querySelectorAll(".table").forEach(table => {
+  table.classList.remove("reserved", "arrived", "cancelled");
 
+  const small = table.querySelector("small");
+  if (small) small.textContent = "";
+
+  table.onclick = null;
+});
  const date =
  document.getElementById(
  "bookingDate"
@@ -1538,7 +1553,22 @@ function markBookingOnFloor(
   if(!table)return;
 
   const status = String(booking.status || "").trim().toLowerCase();
+// Booking end time has passed -> table is free
+if (booking.end_time) {
+  const now = new Date();
 
+  const end = new Date(
+    `${booking.booking_date}T${booking.end_time}`
+  );
+
+  if (now >= end && status !== "arrived") {
+    table.classList.remove("reserved", "arrived");
+    return;
+  }
+}
+   if (status === "finished" || status === "cancelled") {
+  return;
+}
 table.classList.remove("reserved", "arrived", "cancelled");
 
 if(status === "arrived"){
@@ -1547,24 +1577,57 @@ if(status === "arrived"){
     table.classList.add("reserved");
 }
 
-  const small =
-  table.querySelector("small");
+  const small = table.querySelector("small");
 
-  if(small){
+if (small) {
 
-   small.textContent =
-   `${formatTime(
-    booking.booking_time
-   )} · ${booking.guests}`;
+  const startTime = booking.booking_time;
+  const endTime = booking.end_time;
 
+  let timeText = formatTime(startTime);
+
+  if (endTime) {
+    timeText += ` → ${formatTime(endTime)}`;
   }
+
+  let remainingText = "";
+
+  if (status === "arrived" && endTime) {
+
+    const now = new Date();
+
+    const end = new Date(
+      `${booking.booking_date}T${endTime}`
+    );
+
+    const remainingMinutes =
+      Math.ceil((end - now) / 60000);
+
+    if (remainingMinutes > 0) {
+      remainingText =
+        ` · ${remainingMinutes} min left`;
+    } else {
+      remainingText =
+        ` · Time finished`;
+    }
+  }
+
+  small.textContent =
+    `${timeText}${remainingText}`;
+}
 
   table.onclick =
   ()=>openBooking(booking);
 
- });
-
+});
 }
+
+// Refresh floor every minute so "min left" stays current
+setInterval(() => {
+  if (typeof loadBookings === "function") {
+    loadBookings();
+  }
+}, 60000);
 
 
 function normalizeTables(value){
@@ -1595,7 +1658,20 @@ function normalizeTables(value){
 function openBooking(booking){
 
  selectedBooking=booking;
-document.getElementById("editBookingDate").value =
+function openBooking(booking){
+
+  selectedBooking=booking;
+
+  const finishBtn = document.getElementById("finishBookingBtn");
+
+  if (finishBtn) {
+    const status = String(booking.status || "").toLowerCase();
+
+    finishBtn.style.display =
+      status === "arrived" ? "inline-block" : "none";
+  }
+
+  document.getElementById("editBookingDate")...document.getElementById("editBookingDate").value =
   booking.booking_date || "";
 
 document.getElementById("editBookingTime").value =
@@ -1938,7 +2014,25 @@ async function cancelSelectedBooking(){
  }
 
 }
+async function finishSelectedBooking(){
 
+  if(!selectedBooking) return;
+
+  const name =
+    selectedBooking.name ||
+    "this guest";
+
+  if(
+    confirm(
+      `Finish table for ${name}?\n\nThe table will become available again.`
+    )
+  ){
+    await updateStatus(
+      selectedBooking.id,
+      "Finished"
+    );
+  }
+}
 
 /* HELPERS */
 
