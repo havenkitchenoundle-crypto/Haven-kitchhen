@@ -1484,7 +1484,10 @@ function resetFloor(){
   "arrived"
 );
 
-  table.onclick=null;
+  table.onclick = () => {
+  const tableNumber = table.dataset.table;
+  openWalkInModal(tableNumber);
+};
 
   const small =
   table.querySelector("small");
@@ -2191,6 +2194,15 @@ setInterval(()=>{
     </div>
 
     <form id="walkInForm">
+      <div
+  id="walkInSelectedTable"
+  style="
+    color:#c99a45;
+    font-weight:bold;
+    font-size:18px;
+    margin-bottom:15px;
+  ">
+      </div>
 <label>Guests</label>
 <input
   id="walkInGuests"
@@ -2234,6 +2246,7 @@ setInterval(()=>{
   </div>
 </div>
 <script>
+  let selectedWalkInTable = null;
 function openNewBookingModal() {
   document.getElementById("newBookingModal").style.display = "block";
 
@@ -2305,8 +2318,27 @@ document.getElementById("manualBookingForm").addEventListener("submit", async fu
     submitButton.textContent = "Save Booking";
   }
 });
-  function openWalkInModal() {
-  document.getElementById("walkInModal").style.display = "block";
+  function openWalkInModal(tableNumber = null) {
+
+  selectedWalkInTable = tableNumber;
+
+  const tableDisplay =
+    document.getElementById("walkInSelectedTable");
+
+  if (tableDisplay) {
+    tableDisplay.textContent = tableNumber
+      ? `Selected Table: ${tableNumber}`
+      : "Select a table from the Floor Plan";
+  }
+
+  document.getElementById("walkInModal")
+    .style.display = "block";
+  }
+
+  selectedWalkInTable = tableNumber;
+
+  document.getElementById("walkInModal")
+    .style.display = "block";
 }
 
 function closeWalkInModal() {
@@ -2355,8 +2387,9 @@ document.getElementById("walkInForm").addEventListener("submit", async function(
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      p_guests: guests
-    })
+  p_guests: guests,
+  p_table: Number(selectedWalkInTable)
+})
   }
 );
 
