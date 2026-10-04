@@ -1075,8 +1075,13 @@ async function confirmBooking(event) {
 
   const email =
     document.getElementById("email").value;
-// 10+ guests after 16:00 must contact Haven Kitchen
-if (Number(guests) >= 10 && time >= "16:00") {
+// Friday & Saturday: 9+ guests must contact Haven
+const bookingDay = new Date(date + "T12:00:00").getDay();
+
+if (
+  Number(guests) >= 9 &&
+  (bookingDay === 5 || bookingDay === 6)
+) {
   document.getElementById("havenPopup").style.display = "flex";
   return;
 }
