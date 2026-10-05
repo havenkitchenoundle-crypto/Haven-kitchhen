@@ -501,7 +501,16 @@ nav .reserve {
     grid-template-columns: 1fr;
   }
 }
+/* Date calendar icon - make visible on dark background */
+input[type="date"] {
+  color-scheme: dark;
+}
 
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  opacity: 1;
+  cursor: pointer;
+}
 </style>
 </head>
 
