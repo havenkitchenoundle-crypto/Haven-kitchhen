@@ -1601,8 +1601,35 @@ if (small) {
     `${timeText}${remainingText}`;
 }
 
-  table.onclick =
-  ()=>openBooking(booking);
+  table.onclick = () => {
+
+  const status = String(
+    booking.status || ""
+  ).trim().toLowerCase();
+
+  const now = new Date();
+
+  const bookingStart = new Date(
+    `${booking.booking_date}T${booking.booking_time}`
+  );
+
+  // Müşteri şu anda bu masada oturuyorsa
+  // rezervasyon detaylarını aç
+  if (status === "arrived") {
+    openBooking(booking);
+    return;
+  }
+
+  // Rezervasyon daha ilerideyse:
+  // masayı Walk In için seç
+  if (bookingStart > now) {
+    openWalkInModal(number);
+    return;
+  }
+
+  // Diğer durumlarda rezervasyonu aç
+  openBooking(booking);
+};
 
 });
 }
