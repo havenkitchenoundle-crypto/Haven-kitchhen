@@ -1602,32 +1602,23 @@ if (small) {
 }
 
   table.onclick = () => {
+  const status = String(booking.status || "")
+    .trim()
+    .toLowerCase();
 
-  const status = String(
-    booking.status || ""
-  ).trim().toLowerCase();
-
-  const now = new Date();
-
-  const bookingStart = new Date(
-    `${booking.booking_date}T${booking.booking_time}`
-  );
-
-  // Müşteri şu anda bu masada oturuyorsa
-  // rezervasyon detaylarını aç
+  // Masada müşteri zaten oturuyorsa booking'i aç
   if (status === "arrived") {
     openBooking(booking);
     return;
   }
 
-  // Rezervasyon daha ilerideyse:
-  // masayı Walk In için seç
-  if (bookingStart > now) {
+  // Henüz gelmemiş rezervasyon varsa,
+  // masa Walk In için seçilebilir
+  if (status !== "finished" && status !== "cancelled") {
     openWalkInModal(number);
     return;
   }
 
-  // Diğer durumlarda rezervasyonu aç
   openBooking(booking);
 };
 
