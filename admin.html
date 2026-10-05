@@ -846,7 +846,22 @@ onclick="closeModal()">
   >
     Save Changes
   </button>
-
+<button
+    type="button"
+    onclick="startChangeTable()"
+    style="
+        width:100%;
+        padding:12px;
+        margin-top:10px;
+        background:#c99a45;
+        color:#111;
+        border:0;
+        border-radius:7px;
+        font-weight:bold;
+    "
+>
+    CHANGE TABLE
+</button>
   <div
     id="editBookingMessage"
     style="margin-top:10px;">
@@ -2598,6 +2613,79 @@ document.getElementById("walkInForm").addEventListener("submit", async function(
     });
 
 })();
+  let changingTable = false;
+
+function startChangeTable() {
+    if (!selectedBooking) return;
+
+    changingTable = true;
+
+    // Reservation modalını kapat ama selectedBooking'i silme
+    document
+        .getElementById("bookingModal")
+        .classList.remove("open");
+
+    alert("Select the new table on the Floor Plan.");
+}
+
+document.querySelectorAll(".table").forEach(table => {
+
+    table.addEventListener("click", async function(e) {
+
+        if (!changingTable || !selectedBooking) return;
+
+        e.stopPropagation();
+
+        const newTable = Number(this.dataset.table);
+
+        if (!newTable) return;
+
+        const ok = confirm(
+            "Move this reservation to Table " + newTable + "?"
+        );
+
+        if (!ok) return;
+
+        try {
+
+            const response = await authenticatedFetch(
+                `${SUPABASE_URL}/rest/v1/bookings?id=eq.${encodeURIComponent(selectedBooking.id)}`,
+                {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Prefer": "return=minimal"
+                    },
+                    body: JSON.stringify({
+                        table_number: newTable
+                    })
+                }
+            );
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(errorText);
+            }
+
+            changingTable = false;
+
+            alert("Table changed successfully.");
+
+            await loadBookings();
+
+        } catch(error) {
+
+            console.error(error);
+
+            alert(
+                "Could not change table: " +
+                error.message
+            );
+        }
+
+    }, true);
+
+});
 </script>
 </body>
 </html>
