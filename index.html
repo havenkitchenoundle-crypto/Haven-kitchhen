@@ -888,12 +888,11 @@ nav .reserve {
   required
 >
 <label for="date" class="booking-label">Select Date</label>
-      <input
-        id="date"
-        type="date"
-        min="2026-09-29"
-        required
-      >
+<input
+    id="date"
+    type="date"
+    required
+>
 
 <input
         id="guests"
@@ -1321,5 +1320,18 @@ return;
         </button>
     </div>
 </div>
+  <script>
+  const bookingDate = document.getElementById("date");
+
+  if (bookingDate) {
+    const today = new Date();
+    const localToday =
+      today.getFullYear() + "-" +
+      String(today.getMonth() + 1).padStart(2, "0") + "-" +
+      String(today.getDate()).padStart(2, "0");
+
+    bookingDate.min = localToday;
+  }
+  </script>
 </body>
 </html>
