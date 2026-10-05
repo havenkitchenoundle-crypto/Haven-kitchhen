@@ -2450,6 +2450,154 @@ document.getElementById("walkInForm").addEventListener("submit", async function(
 
   }
 });
+  /* =========================================
+   DRAG & DROP TABLES - MOBILE + DESKTOP
+========================================= */
+
+(function () {
+
+    let dragTable = null;
+    let holdTimer = null;
+    let dragging = false;
+    let offsetX = 0;
+    let offsetY = 0;
+
+    const HOLD_TIME = 500;
+
+    document.querySelectorAll(".floor .table").forEach(table => {
+
+        table.addEventListener("pointerdown", function(e) {
+
+            const currentTable = this;
+
+            holdTimer = setTimeout(() => {
+
+                dragging = true;
+                dragTable = currentTable;
+
+                const rect = dragTable.getBoundingClientRect();
+
+                offsetX = e.clientX - rect.left;
+                offsetY = e.clientY - rect.top;
+
+                dragTable.style.zIndex = "9999";
+                dragTable.style.opacity = "0.8";
+
+                if (navigator.vibrate) {
+                    navigator.vibrate(50);
+                }
+
+            }, HOLD_TIME);
+
+        });
+
+        table.addEventListener("pointermove", function(e) {
+
+            if (!dragging || dragTable !== this) return;
+
+            e.preventDefault();
+
+            const floor = document.querySelector(".floor");
+            const floorRect = floor.getBoundingClientRect();
+
+            let x =
+                e.clientX -
+                floorRect.left -
+                offsetX;
+
+            let y =
+                e.clientY -
+                floorRect.top -
+                offsetY;
+
+            x = Math.max(
+                0,
+                Math.min(
+                    x,
+                    floor.clientWidth - dragTable.offsetWidth
+                )
+            );
+
+            y = Math.max(
+                0,
+                Math.min(
+                    y,
+                    floor.clientHeight - dragTable.offsetHeight
+                )
+            );
+
+            dragTable.style.left = x + "px";
+            dragTable.style.top = y + "px";
+
+        });
+
+        table.addEventListener("pointerup", function(e) {
+
+            clearTimeout(holdTimer);
+
+            if (dragging && dragTable === this) {
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                const tableNumber =
+                    dragTable.dataset.table;
+
+                localStorage.setItem(
+                    "table-position-" + tableNumber,
+                    JSON.stringify({
+                        left: dragTable.style.left,
+                        top: dragTable.style.top
+                    })
+                );
+
+                dragTable.style.zIndex = "";
+                dragTable.style.opacity = "";
+
+                setTimeout(() => {
+                    dragging = false;
+                    dragTable = null;
+                }, 100);
+
+            }
+
+        });
+
+        table.addEventListener("pointercancel", function() {
+            clearTimeout(holdTimer);
+            dragging = false;
+
+            if (dragTable) {
+                dragTable.style.zIndex = "";
+                dragTable.style.opacity = "";
+            }
+
+            dragTable = null;
+        });
+
+        /* LOAD SAVED POSITION */
+
+        const saved =
+            localStorage.getItem(
+                "table-position-" + table.dataset.table
+            );
+
+        if (saved) {
+
+            try {
+
+                const position = JSON.parse(saved);
+
+                table.style.left = position.left;
+                table.style.top = position.top;
+
+            } catch (e) {}
+
+        }
+
+    });
+
+})();
 </script>
 </body>
 </html>
