@@ -1065,86 +1065,72 @@ async function getNearbyAvailableTimes(date, time, guests) {
         return;
     }
 
-    // Friday & Saturday: 9+ guests must call Haven
     const bookingDay =
         new Date(date + "T12:00:00").getDay();
 
+    // Friday & Saturday: 9+ guests must contact Haven
     if (
         guests >= 9 &&
         (bookingDay === 5 || bookingDay === 6)
     ) {
-        timeSelect.disabled = true;
-        document.getElementById("havenPopup").style.display = "flex";
-        return;
-    }
-
-    /*
-      Candidate arrival times.
-
-      Lunch has no fixed seating-time choice.
-      Evening seating starts at 17:30.
-
-      After 21:00 booking is free until closing.
-    */
-    const candidateTimes = [
-        "17:30",
-        "18:30",
-        "19:30",
-        "20:00",
-        "20:30",
-        "21:00",
-        "21:30"
-    ];
-
-    let availableTimes = [];
-
-    for (const candidateTime of candidateTimes) {
-        try {
-            const response = await fetch(
-                `${SUPABASE_URL}/rest/v1/rpc/check_booking_availability`,
-                {
-                    method: "POST",
-                    headers: {
-                        "apikey": SUPABASE_KEY,
-                        "Authorization": `Bearer ${SUPABASE_KEY}`,
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        p_date: date,
-                        p_time: candidateTime,
-                        p_guests: guests
-                    })
-                }
-            );
-
-            if (!response.ok) continue;
-
-            const available = await response.json();
-
-            if (available === true) {
-                availableTimes.push(candidateTime);
-            }
-
-        } catch (error) {
-            console.error("Availability check error:", error);
-        }
-    }
-
-    if (availableTimes.length === 0) {
         timeSelect.innerHTML =
-            '<option value="">No available times</option>';
+            '<option value="">Please call us for 9+ guests</option>';
         timeSelect.disabled = true;
         return;
     }
 
-    availableTimes.forEach(function(time) {
-        const option = document.createElement("option");
-        option.value = time;
-        option.textContent = time;
-        timeSelect.appendChild(option);
-    });
+    try {
+        const response = await fetch(
+            `${SUPABASE_URL}/rest/v1/rpc/get_available_booking_times`,
+            {
+                method: "POST",
+                headers: {
+                    "apikey": SUPABASE_KEY,
+                    "Authorization": `Bearer ${SUPABASE_KEY}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    p_date: date,
+                    p_guests: guests
+                })
+            }
+        );
 
-    timeSelect.disabled = false;
+        if (!response.ok) {
+            throw new Error(
+                "Could not load available booking times"
+            );
+        }
+
+        const data = await response.json();
+
+        if (!data || data.length === 0) {
+            timeSelect.innerHTML =
+                '<option value="">No available times</option>';
+            timeSelect.disabled = true;
+            return;
+        }
+
+        data.forEach(function(item) {
+            const time = item.available_time.substring(0, 5);
+
+            const option = document.createElement("option");
+            option.value = time;
+            option.textContent = time;
+
+            timeSelect.appendChild(option);
+        });
+
+        timeSelect.disabled = false;
+
+    } catch (error) {
+        console.error("Availability error:", error);
+
+        timeSelect.innerHTML =
+            '<option value="">Unable to load times</option>';
+
+        timeSelect.disabled = true;
+    }
 }
 
 document
