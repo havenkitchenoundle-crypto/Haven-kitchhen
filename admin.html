@@ -581,11 +581,20 @@ onclick="goToday()">
 Today
 </button>
 
-<input
-type="date"
-id="bookingDate"
-onchange="loadBookings()">
+<button
+    type="button"
+    id="calendarButton"
+    onclick="openCalendar()">
+    Select Date
+</button>
 
+<input
+    type="date"
+    id="bookingDate"
+    onchange="loadBookings()"
+    style="position:absolute; opacity:0; pointer-events:none;">
+
+<div id="calendarPopup"></div>
 <button onclick="changeDate(1)">→</button>
 
 <select
@@ -2686,6 +2695,15 @@ document.querySelectorAll(".table").forEach(table => {
     }, true);
 
 });
+  function openCalendar() {
+    const input = document.getElementById("bookingDate");
+
+    if (input.showPicker) {
+        input.showPicker();
+    } else {
+        input.click();
+    }
+  }
 </script>
 </body>
 </html>
