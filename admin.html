@@ -653,26 +653,32 @@ Logout
 id="bookingList"
 class="booking-list">
 </div>
-<h2 style="margin-top:35px;">
-  Seated <span id="seatedGuestCount"></span>
-</h2>
+
 
 <div
   id="seatedList"
   class="booking-list">
 </div>
-<h2 style="margin-top:35px;">
-  Finished <span id="finishedGuestCount"></span>
+<h2 style="margin-top:35px; cursor:pointer;"
+    onclick="toggleBookingSection('seatedList', 'seatedArrow')">
+    <span id="seatedArrow">▼</span>
+    Seated <span id="seatedGuestCount"></span>
 </h2>
 
 <div
   id="finishedList"
   class="booking-list">
 </div>
-<h2 style="margin-top:35px;">
-  Cancelled <span id="cancelledGuestCount"></span>
+<h2 style="margin-top:35px; cursor:pointer;"
+    onclick="toggleBookingSection('finishedList', 'finishedArrow')">
+    <span id="finishedArrow">▼</span>
+    Finished <span id="finishedGuestCount"></span>
 </h2>
-
+<h2 style="margin-top:35px; cursor:pointer;"
+    onclick="toggleBookingSection('cancelledList', 'cancelledArrow')">
+    <span id="cancelledArrow">▼</span>
+    Cancelled <span id="cancelledGuestCount"></span>
+</h2>
 <div
   id="cancelledList"
   class="booking-list">
@@ -2702,6 +2708,18 @@ document.querySelectorAll(".table").forEach(table => {
         input.showPicker();
     } else {
         input.click();
+    }
+  }
+  function toggleBookingSection(listId, arrowId) {
+    const list = document.getElementById(listId);
+    const arrow = document.getElementById(arrowId);
+
+    if (list.style.display === "none") {
+        list.style.display = "";
+        arrow.textContent = "▼";
+    } else {
+        list.style.display = "none";
+        arrow.textContent = "▶";
     }
   }
 </script>
