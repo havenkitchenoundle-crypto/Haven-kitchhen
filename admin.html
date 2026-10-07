@@ -2287,10 +2287,9 @@ setInterval(()=>{
 
 <select
   id="walkInTableChoice"
-  required
+  
   style="width:100%;padding:12px;margin-bottom:15px;"
 >
-  <option value="">Enter guest count first</option>
 </select>
       <div style="display:flex;gap:10px;">
 
@@ -2640,9 +2639,7 @@ tables
     const tableNumber = Number(table.table_number);
 
     // Floor'dan bir masa seçildiyse sadece o masayı göster
-    if (selectedWalkInTable !== null) {
-      return tableNumber === Number(selectedWalkInTable);
-    }
+    
 
     // + Walk In butonundan açıldıysa normal kontrol
     return (
@@ -2824,8 +2821,11 @@ async function submitWalkIn() {
       );
 
 
-    const selectedTables =
-  selectedWalkInTables.map(Number);
+const choice = document.getElementById("walkInTableChoice").value;
+
+const selectedTables = choice
+  ? choice.split(",").map(Number)
+  : selectedWalkInTables.map(Number);;
 
 
     const message =
