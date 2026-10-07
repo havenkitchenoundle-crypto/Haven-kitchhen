@@ -2784,7 +2784,9 @@ async function submitWalkIn() {
 
 
     const selected =
-      document.getElementById(
+  selectedWalkInTable !== null
+    ? String(selectedWalkInTable)
+    : document.getElementById(
         "walkInTableChoice"
       ).value;
 
