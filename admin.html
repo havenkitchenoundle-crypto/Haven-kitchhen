@@ -2287,9 +2287,9 @@ setInterval(()=>{
 
 <select
   id="walkInTableChoice"
-  
   style="width:100%;padding:12px;margin-bottom:15px;"
 >
+  <option value="">Enter guest count first</option>
 </select>
       <div style="display:flex;gap:10px;">
 
@@ -2638,24 +2638,18 @@ tables
   .filter(table => {
     const tableNumber = Number(table.table_number);
 
-    // Floor'dan bir masa seçildiyse sadece o masayı göster
-    
-
-    // + Walk In butonundan açıldıysa normal kontrol
     return (
       Number(table.capacity) >= guests &&
       !occupied.has(tableNumber)
     );
   })
   .forEach(table => {
-
     options.push({
       tables: [Number(table.table_number)],
       label: `Table ${table.table_number} (capacity ${table.capacity})`,
       numberOfTables: 1,
       capacity: Number(table.capacity)
     });
-
   });
 
     /* TABLE COMBINATIONS */
@@ -2823,8 +2817,12 @@ async function submitWalkIn() {
 
 const choice = document.getElementById("walkInTableChoice").value;
 
+const choice =
+  document.getElementById("walkInTableChoice").value;
+
 const selectedTables = choice
   ? choice.split(",").map(Number)
+  : selectedWalkInTables.map(Number);
   : selectedWalkInTables.map(Number);;
 
 
