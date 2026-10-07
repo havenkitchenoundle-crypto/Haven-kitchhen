@@ -2958,90 +2958,53 @@ document
 
     try {
 
-      const response =
-        await authenticatedFetch(
-
-          `${SUPABASE_URL}/rest/v1/rpc/create_walk_in`,
-
-          {
-
-            method: "POST",
-
-            headers: {
-              "Content-Type":
-                "application/json"
-            },
-
-            body: JSON.stringify({
-
-              p_guests: guests,
-
-              p_tables:
-                selectedTables
-
-            })
-
-          }
-
-        );
-
-
-      if (!response.ok) {
-
-        const errorText =
-          await response.text();
-
-        throw new Error(
-          errorText
-        );
-
-      }
-
-
-      const result =
-        await response.json();
-
-
-      if (result !== true) {
-
-        throw new Error(
-          "Table is no longer available."
-        );
-
-      }
-
-
-      this.reset();
-
-      closeWalkInModal();
-
-      await loadBookings();
-
-
-    } catch (error) {
-
-      console.error(error);
-
-      message.style.color =
-        "#ff7777";
-
-      message.textContent =
-        "Could not seat Walk In. Choose another table.";
-
-      await loadWalkInTableOptions();
-
-    }
-
-
-    submitButton.disabled = false;
-
-    submitButton.textContent =
-      "Seat Walk In";
-
+      const response = await authenticatedFetch(
+  `${SUPABASE_URL}/rest/v1/rpc/create_walk_in`,
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      p_guests: guests,
+      p_tables: selectedTables
+    })
   }
 );
 
-</script>
+if (!response.ok) {
+  const errorText = await response.text();
+  throw new Error(errorText);
+}
+
+const result = await response.json();
+
+if (result !== true) {
+  throw new Error("Table is no longer available.");
+}
+
+this.reset();
+closeWalkInModal();
+await loadBookings();
+
+} catch (error) {
+
+  console.error(error);
+
+  message.style.color = "#ff7777";
+  message.textContent =
+    "Could not seat Walk In. Choose another table.";
+
+  await loadWalkInTableOptions();
+
+} finally {
+
+  submitButton.disabled = false;
+  submitButton.textContent = "Seat Walk In";
+
+}
+
+});
   /* =========================================
    DRAG & DROP TABLES - MOBILE + DESKTOP
 ========================================= */
