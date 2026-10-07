@@ -1534,6 +1534,9 @@ function resetFloor(){
 );
 
   table.onclick = () => {
+  const tableNumber = Number(table.dataset.table);
+  openWalkInModal(tableNumber);
+};
   const tableNumber = table.dataset.table;
   if (document.getElementById("walkInModal").style.display === "block") {
   toggleWalkInTable(tableNumber);
