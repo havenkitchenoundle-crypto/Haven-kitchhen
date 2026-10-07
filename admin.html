@@ -2878,7 +2878,7 @@ await loadBookings();
 
   message.style.color = "#ff7777";
   message.textContent =
-    "Could not seat Walk In. Choose another table.";
+  "ERROR: " + error.message;
 
   await loadWalkInTableOptions();
 
