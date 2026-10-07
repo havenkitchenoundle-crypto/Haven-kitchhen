@@ -2424,62 +2424,624 @@ document.getElementById("walkInForm").addEventListener("submit", async function(
   const month = String(now.getMonth() + 1).padStart(2, "0");
   const day = String(now.getDate()).padStart(2, "0");
   const hours = String(now.getHours()).padStart(2, "0");
-  const minutes = String(now.getMinutes()).padStart(2, "0");
+<!-- WALK IN MODAL -->
+<div id="walkInModal" class="modal">
+  <div class="modal-card">
 
-  const booking = {
-    p_name: "Walk In",
-    p_phone: "",
-    p_email: "",
-    p_date: `${year}-${month}-${day}`,
-    p_time: `${hours}:${minutes}`,
-    p_guests: guests,
-    p_notes: "Walk In"
-  };
+    <div class="modal-header">
+      <h2>Walk In</h2>
 
-  const submitButton = this.querySelector('button[type="submit"]');
-  submitButton.disabled = true;
-  submitButton.textContent = "Seating...";
+      <button
+        type="button"
+        class="close"
+        onclick="closeWalkInModal()">
+        ×
+      </button>
+    </div>
+
+    <form id="walkInForm">
+
+      <label>Guests</label>
+      <input
+        id="walkInGuests"
+        type="number"
+        min="1"
+        required
+        oninput="loadWalkInTableOptions()"
+        style="width:100%;padding:12px;margin:6px 0 15px;"
+      >
+
+      <label>Choose Table(s)</label>
+      <select
+        id="walkInTableChoice"
+        required
+        style="
+          width:100%;
+          padding:12px;
+          margin:6px 0 15px;
+          background:#0d100e;
+          color:white;
+          border:1px solid #303831;
+          border-radius:7px;
+        "
+      >
+        <option value="">Enter guest count first</option>
+      </select>
+
+      <div style="display:flex;gap:10px;">
+
+        <button
+          type="button"
+          onclick="closeWalkInModal()"
+          style="flex:1;padding:13px;">
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          style="
+            flex:1;
+            padding:13px;
+            background:#c9a34e;
+            color:#111;
+            font-weight:bold;
+            border:0;
+            border-radius:6px;
+          ">
+          Seat Walk In
+        </button>
+
+      </div>
+
+      <div
+        id="walkInMessage"
+        style="margin-top:15px;">
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<script>
+
+let selectedWalkInTable = null;
+
+function openWalkInModal(tableNumber = null) {
+
+  selectedWalkInTable = tableNumber;
+
+  const form =
+    document.getElementById("walkInForm");
+
+  const select =
+    document.getElementById("walkInTableChoice");
+
+  const message =
+    document.getElementById("walkInMessage");
+
+  if (form) {
+    form.reset();
+  }
+
+  if (select) {
+    select.innerHTML =
+      '<option value="">Enter guest count first</option>';
+  }
+
+  if (message) {
+    message.textContent = "";
+  }
+
+  document.getElementById("walkInModal")
+    .style.display = "block";
+}
+
+
+function closeWalkInModal() {
+
+  document.getElementById("walkInModal")
+    .style.display = "none";
+
+}
+
+
+async function loadWalkInTableOptions() {
+
+  const guests =
+    Number(
+      document.getElementById("walkInGuests").value
+    );
+
+  const select =
+    document.getElementById("walkInTableChoice");
+
+  const message =
+    document.getElementById("walkInMessage");
+
+  select.innerHTML =
+    '<option value="">Choose table(s)</option>';
+
+  message.textContent = "";
+
+  if (!guests || guests < 1) {
+    return;
+  }
 
   try {
 
-    const response = await authenticatedFetch(
-  `${SUPABASE_URL}/rest/v1/rpc/create_walk_in`,
-  {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-  p_guests: guests,
-  p_table: Number(selectedWalkInTable)
-})
-  }
-);
+    const today =
+      getLocalDateString(new Date());
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(errorText);
+    const now = new Date();
+
+    const nowMinutes =
+      now.getHours() * 60 +
+      now.getMinutes();
+
+
+    /* LOAD TABLES */
+
+    const tablesResponse =
+      await authenticatedFetch(
+        `${SUPABASE_URL}/rest/v1/restaurant_tables?active=eq.true&select=table_number,capacity&order=table_number.asc`
+      );
+
+
+    /* LOAD COMBINATIONS */
+
+    const combinationsResponse =
+      await authenticatedFetch(
+        `${SUPABASE_URL}/rest/v1/table_combinations?active=eq.true&select=id,table_numbers,min_capacity,max_capacity&order=id.asc`
+      );
+
+
+    /* LOAD TODAY BOOKINGS */
+
+    const bookingsResponse =
+      await authenticatedFetch(
+        `${SUPABASE_URL}/rest/v1/bookings?booking_date=eq.${today}&select=assigned_tables,booking_time,end_time,status`
+      );
+
+
+    if (
+      !tablesResponse.ok ||
+      !combinationsResponse.ok ||
+      !bookingsResponse.ok
+    ) {
+      throw new Error(
+        "Could not load tables."
+      );
     }
 
-    this.reset();
-    closeWalkInModal();
 
-    setTimeout(() => {
-      location.reload();
-    }, 500);
+    const tables =
+      await tablesResponse.json();
+
+    const combinations =
+      await combinationsResponse.json();
+
+    const bookings =
+      await bookingsResponse.json();
+
+
+    /* FIND TABLES CURRENTLY IN USE */
+
+    const occupied =
+      new Set();
+
+
+    bookings.forEach(booking => {
+
+      const status =
+        String(
+          booking.status || ""
+        )
+        .trim()
+        .toLowerCase();
+
+
+      if (
+        status === "cancelled" ||
+        status === "finished"
+      ) {
+        return;
+      }
+
+
+      const startParts =
+        String(
+          booking.booking_time ||
+          "00:00"
+        ).split(":");
+
+
+      const endParts =
+        String(
+          booking.end_time ||
+          booking.booking_time ||
+          "00:00"
+        ).split(":");
+
+
+      const startMinutes =
+        Number(startParts[0]) * 60 +
+        Number(startParts[1]);
+
+
+      const endMinutes =
+        Number(endParts[0]) * 60 +
+        Number(endParts[1]);
+
+
+      if (
+        nowMinutes >= startMinutes &&
+        nowMinutes < endMinutes
+      ) {
+
+        normalizeTables(
+          booking.assigned_tables
+        ).forEach(table => {
+
+          occupied.add(
+            Number(table)
+          );
+
+        });
+
+      }
+
+    });
+
+
+    const options = [];
+
+
+    /* SINGLE TABLE OPTIONS */
+
+    tables
+      .filter(table => {
+
+        return (
+          Number(table.capacity) >= guests &&
+          !occupied.has(
+            Number(table.table_number)
+          )
+        );
+
+      })
+      .forEach(table => {
+
+        options.push({
+
+          tables: [
+            Number(table.table_number)
+          ],
+
+          label:
+            `Table ${table.table_number} ` +
+            `(capacity ${table.capacity})`,
+
+          numberOfTables: 1,
+
+          capacity:
+            Number(table.capacity)
+
+        });
+
+      });
+
+
+    /* TABLE COMBINATIONS */
+
+    combinations
+      .filter(combo => {
+
+        const comboTables =
+          normalizeTables(
+            combo.table_numbers
+          );
+
+
+        const capacityOK =
+          Number(
+            combo.min_capacity || 1
+          ) <= guests
+          &&
+          Number(
+            combo.max_capacity
+          ) >= guests;
+
+
+        const allFree =
+          comboTables.every(
+            table =>
+              !occupied.has(
+                Number(table)
+              )
+          );
+
+
+        return (
+          capacityOK &&
+          allFree &&
+          comboTables.length > 0
+        );
+
+      })
+      .forEach(combo => {
+
+        const comboTables =
+          normalizeTables(
+            combo.table_numbers
+          );
+
+
+        options.push({
+
+          tables: comboTables,
+
+          label:
+            `Tables ${comboTables.join(" + ")} ` +
+            `(up to ${combo.max_capacity})`,
+
+          numberOfTables:
+            comboTables.length,
+
+          capacity:
+            Number(combo.max_capacity)
+
+        });
+
+      });
+
+
+    /* BEST OPTIONS FIRST */
+
+    options.sort((a, b) =>
+
+      a.numberOfTables -
+      b.numberOfTables
+
+      ||
+
+      a.capacity -
+      b.capacity
+
+      ||
+
+      a.tables[0] -
+      b.tables[0]
+
+    );
+
+
+    /* SHOW OPTIONS */
+
+    options.forEach(option => {
+
+      const item =
+        document.createElement(
+          "option"
+        );
+
+      item.value =
+        option.tables.join(",");
+
+      item.textContent =
+        option.label;
+
+      select.appendChild(item);
+
+    });
+
+
+    if (!options.length) {
+
+      message.style.color =
+        "#ff7777";
+
+      message.textContent =
+        "No suitable tables available right now.";
+
+    }
+
+
+    /* IF FLOOR TABLE WAS CLICKED */
+
+    if (selectedWalkInTable) {
+
+      const preferred =
+        options.find(option =>
+          option.tables.includes(
+            Number(selectedWalkInTable)
+          )
+        );
+
+      if (preferred) {
+
+        select.value =
+          preferred.tables.join(",");
+
+      }
+
+    }
+
 
   } catch (error) {
 
     console.error(error);
-    alert("Could not create Walk In.");
 
-  } finally {
+    message.style.color =
+      "#ff7777";
 
-    submitButton.disabled = false;
-    submitButton.textContent = "Seat Walk In";
+    message.textContent =
+      "Could not load available tables.";
 
   }
-});
+
+}
+
+
+document
+.getElementById("walkInForm")
+.addEventListener(
+  "submit",
+  async function(event) {
+
+    event.preventDefault();
+
+
+    const guests =
+      Number(
+        document.getElementById(
+          "walkInGuests"
+        ).value
+      );
+
+
+    const selected =
+      document.getElementById(
+        "walkInTableChoice"
+      ).value;
+
+
+    const message =
+      document.getElementById(
+        "walkInMessage"
+      );
+
+
+    if (!guests || guests < 1) {
+
+      message.style.color =
+        "#ff7777";
+
+      message.textContent =
+        "Please enter number of guests.";
+
+      return;
+
+    }
+
+
+    if (!selected) {
+
+      message.style.color =
+        "#ff7777";
+
+      message.textContent =
+        "Please choose a table.";
+
+      return;
+
+    }
+
+
+    const selectedTables =
+      selected
+        .split(",")
+        .map(Number)
+        .filter(Number.isFinite);
+
+
+    const submitButton =
+      this.querySelector(
+        'button[type="submit"]'
+      );
+
+
+    submitButton.disabled = true;
+
+    submitButton.textContent =
+      "Seating...";
+
+
+    try {
+
+      const response =
+        await authenticatedFetch(
+
+          `${SUPABASE_URL}/rest/v1/rpc/create_walk_in`,
+
+          {
+
+            method: "POST",
+
+            headers: {
+              "Content-Type":
+                "application/json"
+            },
+
+            body: JSON.stringify({
+
+              p_guests: guests,
+
+              p_tables:
+                selectedTables
+
+            })
+
+          }
+
+        );
+
+
+      if (!response.ok) {
+
+        const errorText =
+          await response.text();
+
+        throw new Error(
+          errorText
+        );
+
+      }
+
+
+      const result =
+        await response.json();
+
+
+      if (result !== true) {
+
+        throw new Error(
+          "Table is no longer available."
+        );
+
+      }
+
+
+      this.reset();
+
+      closeWalkInModal();
+
+      await loadBookings();
+
+
+    } catch (error) {
+
+      console.error(error);
+
+      message.style.color =
+        "#ff7777";
+
+      message.textContent =
+        "Could not seat Walk In. Choose another table.";
+
+      await loadWalkInTableOptions();
+
+    }
+
+
+    submitButton.disabled = false;
+
+    submitButton.textContent =
+      "Seat Walk In";
+
+  }
+);
+
+</script>
   /* =========================================
    DRAG & DROP TABLES - MOBILE + DESKTOP
 ========================================= */
