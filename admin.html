@@ -2774,7 +2774,10 @@ document
   async function(event) {
 
     event.preventDefault();
-alert("WALK IN SUBMIT ÇALIŞTI");
+alert(
+  "guests=" + document.getElementById("walkInGuests").value +
+  " | table=" + document.getElementById("walkInTableChoice").value
+);
 
     const guests =
       Number(
