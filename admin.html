@@ -2313,7 +2313,7 @@ setInterval(()=>{
   </div>
 </div>
 <script>
-  let selectedWalkInTable = null;
+  
 function openNewBookingModal() {
   document.getElementById("newBookingModal").style.display = "block";
 
@@ -2385,82 +2385,7 @@ document.getElementById("manualBookingForm").addEventListener("submit", async fu
 });
 
           </script>                                             <!-- WALK IN MODAL -->
-<div id="walkInModal" class="modal">
-  <div class="modal-card">
 
-    <div class="modal-header">
-      <h2>Walk In</h2>
-
-      <button
-        type="button"
-        class="close"
-        onclick="closeWalkInModal()">
-        ×
-      </button>
-    </div>
-
-    <form id="walkInForm">
-
-      <label>Guests</label>
-      <input
-        id="walkInGuests"
-        type="number"
-        min="1"
-        required
-        oninput="loadWalkInTableOptions()"
-        style="width:100%;padding:12px;margin:6px 0 15px;"
-      >
-
-      <label>Choose Table(s)</label>
-      <select
-        id="walkInTableChoice"
-        required
-        style="
-          width:100%;
-          padding:12px;
-          margin:6px 0 15px;
-          background:#0d100e;
-          color:white;
-          border:1px solid #303831;
-          border-radius:7px;
-        "
-      >
-        <option value="">Enter guest count first</option>
-      </select>
-
-      <div style="display:flex;gap:10px;">
-
-        <button
-          type="button"
-          onclick="closeWalkInModal()"
-          style="flex:1;padding:13px;">
-          Cancel
-        </button>
-
-        <button
-          type="submit"
-          style="
-            flex:1;
-            padding:13px;
-            background:#c9a34e;
-            color:#111;
-            font-weight:bold;
-            border:0;
-            border-radius:6px;
-          ">
-          Seat Walk In
-        </button>
-
-      </div>
-
-      <div
-        id="walkInMessage"
-        style="margin-top:15px;">
-      </div>
-
-    </form>
-  </div>
-</div>
           
 <script>
 
