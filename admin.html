@@ -2594,53 +2594,31 @@ async function loadWalkInTableOptions() {
 
     /* SINGLE TABLE OPTIONS */
 
-    tables
+tables
   .filter(table => {
+    const tableNumber = Number(table.table_number);
 
-    const tableNumber =
-      Number(table.table_number);
+    // Floor'dan bir masa seçildiyse sadece o masayı göster
+    if (selectedWalkInTable !== null) {
+      return tableNumber === Number(selectedWalkInTable);
+    }
 
-    const capacity =
-      Number(table.capacity);
-
-    const capacityOK =
-      !Number.isFinite(capacity) ||
-      capacity <= 0 ||
-      capacity >= guests;
-
-    const isClickedTable =
-      selectedWalkInTable !== null &&
-      tableNumber === Number(selectedWalkInTable);
-
+    // + Walk In butonundan açıldıysa normal kontrol
     return (
-      !occupied.has(tableNumber) &&
-      (capacityOK || isClickedTable)
+      Number(table.capacity) >= guests &&
+      !occupied.has(tableNumber)
     );
-
   })
   .forEach(table => {
 
     options.push({
-
-      tables: [
-        Number(table.table_number)
-      ],
-
-      label:
-        `Table ${table.table_number}` +
-        (Number(table.capacity) > 0
-          ? ` (capacity ${table.capacity})`
-          : ""),
-
+      tables: [Number(table.table_number)],
+      label: `Table ${table.table_number} (capacity ${table.capacity})`,
       numberOfTables: 1,
-
-      capacity:
-        Number(table.capacity)
-
+      capacity: Number(table.capacity)
     });
 
   });
-
 
     /* TABLE COMBINATIONS */
 
