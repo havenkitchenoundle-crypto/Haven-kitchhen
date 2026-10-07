@@ -2416,12 +2416,20 @@ function openWalkInModal(tableNumber = null) {
       '<option value="">Enter guest count first</option>';
   }
 
-  if (message) {
-    message.textContent = "";
-  }
+if (message) {
+  message.textContent = "";
+}
 
-  document.getElementById("walkInModal")
-    .style.display = "block";
+const selectedLabel =
+  document.getElementById("walkInSelectedTable");
+
+if (selectedLabel) {
+  selectedLabel.textContent =
+    tableNumber ? `Selected table: ${tableNumber}` : "";
+}
+
+document.getElementById("walkInModal")
+  .style.display = "block";
 }
 
 
@@ -2589,12 +2597,27 @@ async function loadWalkInTableOptions() {
     tables
       .filter(table => {
 
-        return (
-          Number(table.capacity) >= guests &&
-          !occupied.has(
-            Number(table.table_number)
-          )
-        );
+        const tableNumber =
+  Number(table.table_number);
+
+const capacity =
+  Number(table.capacity);
+
+const capacityOK =
+  !Number.isFinite(capacity) ||
+  capacity <= 0 ||
+  capacity >= guests;
+
+const isClickedTable =
+  selectedWalkInTable !== null &&
+  tableNumber === Number(selectedWalkInTable);
+
+return (
+label:
+  `Table ${table.table_number}` +
+  (Number(table.capacity) > 0
+    ? ` (capacity ${table.capacity})`
+    : ""),
 
       })
       .forEach(table => {
