@@ -2290,7 +2290,7 @@ setInterval(()=>{
 
         <button
   type="button"
-  onclick="alert('BUTTON WORKS')"
+  onclick="submitWalkIn()"
   style="flex:1;padding:13px;background:#c9a34e;color:#111;font-weight:bold;border:0;border-radius:6px;">
   Seat Walk In
         </button>
@@ -2760,18 +2760,10 @@ async function loadWalkInTableOptions() {
 
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-document
-.getElementById("walkInForm")
-.addEventListener(
-  "submit",
-  async function(event) {
 
-    event.preventDefault();
-alert(
-  "guests=" + document.getElementById("walkInGuests").value +
-  " | table=" + document.getElementById("walkInTableChoice").value
-);
+async function submitWalkIn() {
+
+    
 
     const guests =
       Number(
@@ -2827,9 +2819,9 @@ alert(
 
 
     const submitButton =
-      this.querySelector(
-        'button[type="submit"]'
-      );
+    document.querySelector(
+        '#walkInForm button[onclick="submitWalkIn()"]'
+    );
 
 
     submitButton.disabled = true;
@@ -2865,7 +2857,7 @@ if (result !== true) {
   throw new Error("Table is no longer available.");
 }
 
-this.reset();
+document.getElementById("walkInForm").reset();
 closeWalkInModal();
 await loadBookings();
 
@@ -2886,8 +2878,8 @@ await loadBookings();
 
 }
 
-});
-  });
+
+
   /* =========================================
    DRAG & DROP TABLES - MOBILE + DESKTOP
 ========================================= */
