@@ -1522,30 +1522,17 @@ if (currentStatus === "cancelled") {
 
 /* FLOOR */
 
-function resetFloor(){
+function resetFloor() {
+  document.querySelectorAll(".table").forEach(table => {
+    table.classList.remove("reserved", "arrived");
 
- document
- .querySelectorAll(".table")
- .forEach(table=>{
+    table.onclick = () => {
+      openWalkInModal(Number(table.dataset.table));
+    };
 
-  table.classList.remove(
-  "reserved",
-  "arrived"
-);
-
-  table.onclick = () => {
-  const tableNumber = Number(table.dataset.table);
-  table.onclick = () => {
-  const tableNumber = Number(table.dataset.table);
-  openWalkInModal(tableNumber);
-};
-  table.querySelector("small");
-
-  if(small)
-   small.textContent="";
-
- });
-
+    const small = table.querySelector("small");
+    if (small) small.textContent = "";
+  });
 }
 
 
