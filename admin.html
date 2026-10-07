@@ -2595,51 +2595,51 @@ async function loadWalkInTableOptions() {
     /* SINGLE TABLE OPTIONS */
 
     tables
-      .filter(table => {
+  .filter(table => {
 
-        const tableNumber =
-  Number(table.table_number);
+    const tableNumber =
+      Number(table.table_number);
 
-const capacity =
-  Number(table.capacity);
+    const capacity =
+      Number(table.capacity);
 
-const capacityOK =
-  !Number.isFinite(capacity) ||
-  capacity <= 0 ||
-  capacity >= guests;
+    const capacityOK =
+      !Number.isFinite(capacity) ||
+      capacity <= 0 ||
+      capacity >= guests;
 
-const isClickedTable =
-  selectedWalkInTable !== null &&
-  tableNumber === Number(selectedWalkInTable);
+    const isClickedTable =
+      selectedWalkInTable !== null &&
+      tableNumber === Number(selectedWalkInTable);
 
-return (
-label:
-  `Table ${table.table_number}` +
-  (Number(table.capacity) > 0
-    ? ` (capacity ${table.capacity})`
-    : ""),
+    return (
+      !occupied.has(tableNumber) &&
+      (capacityOK || isClickedTable)
+    );
 
-      })
-      .forEach(table => {
+  })
+  .forEach(table => {
 
-        options.push({
+    options.push({
 
-          tables: [
-            Number(table.table_number)
-          ],
+      tables: [
+        Number(table.table_number)
+      ],
 
-          label:
-            `Table ${table.table_number} ` +
-            `(capacity ${table.capacity})`,
+      label:
+        `Table ${table.table_number}` +
+        (Number(table.capacity) > 0
+          ? ` (capacity ${table.capacity})`
+          : ""),
 
-          numberOfTables: 1,
+      numberOfTables: 1,
 
-          capacity:
-            Number(table.capacity)
+      capacity:
+        Number(table.capacity)
 
-        });
+    });
 
-      });
+  });
 
 
     /* TABLE COMBINATIONS */
