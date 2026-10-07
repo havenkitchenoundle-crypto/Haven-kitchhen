@@ -2393,10 +2393,9 @@ document.getElementById("manualBookingForm").addEventListener("submit", async fu
 <script>
 
 let selectedWalkInTable = null;
+  let selectedWalkInTables = [];
 
 function openWalkInModal(tableNumber = null) {
-
-  selectedWalkInTable = tableNumber;
 
   const form =
     document.getElementById("walkInForm");
@@ -2407,31 +2406,69 @@ function openWalkInModal(tableNumber = null) {
   const message =
     document.getElementById("walkInMessage");
 
+  selectedWalkInTables = [];
+
+  if (tableNumber !== null) {
+    selectedWalkInTables.push(Number(tableNumber));
+  }
+
+  selectedWalkInTable = tableNumber;
+
   if (form) {
     form.reset();
   }
 
   if (select) {
     select.innerHTML =
-      '<option value="">Enter guest count first</option>';
+      '<option value="">Select tables from floor plan</option>';
   }
 
-if (message) {
-  message.textContent = "";
+  if (message) {
+    message.textContent = "";
+  }
+
+  updateWalkInSelectedTables();
+
+  document.getElementById("walkInModal")
+    .style.display = "block";
+}
+function updateWalkInSelectedTables() {
+
+  const label =
+    document.getElementById("walkInSelectedTable");
+
+  if (!label) return;
+
+  if (selectedWalkInTables.length === 0) {
+    label.textContent = "No tables selected";
+  } else {
+    label.textContent =
+      "Selected tables: " +
+      selectedWalkInTables.join(", ");
+  }
 }
 
-const selectedLabel =
-  document.getElementById("walkInSelectedTable");
 
-if (selectedLabel) {
-  selectedLabel.textContent =
-    tableNumber ? `Selected table: ${tableNumber}` : "";
+function toggleWalkInTable(tableNumber) {
+
+  tableNumber = Number(tableNumber);
+
+  const index =
+    selectedWalkInTables.indexOf(tableNumber);
+
+  if (index === -1) {
+    selectedWalkInTables.push(tableNumber);
+  } else {
+    selectedWalkInTables.splice(index, 1);
+  }
+
+  selectedWalkInTable =
+    selectedWalkInTables.length
+      ? selectedWalkInTables[0]
+      : null;
+
+  updateWalkInSelectedTables();
 }
-
-document.getElementById("walkInModal")
-  .style.display = "block";
-}
-
 
 function closeWalkInModal() {
 
@@ -2783,12 +2820,8 @@ async function submitWalkIn() {
       );
 
 
-    const selected =
-  selectedWalkInTable !== null
-    ? String(selectedWalkInTable)
-    : document.getElementById(
-        "walkInTableChoice"
-      ).value;
+    const selectedTables =
+  selectedWalkInTables.map(Number);
 
 
     const message =
@@ -2810,24 +2843,11 @@ async function submitWalkIn() {
     }
 
 
-    if (!selected) {
-
-      message.style.color =
-        "#ff7777";
-
-      message.textContent =
-        "Please choose a table.";
-
-      return;
-
-    }
-
-
-    const selectedTables =
-      selected
-        .split(",")
-        .map(Number)
-        .filter(Number.isFinite);
+    if (!selectedTables.length) {
+    message.style.color = "#ff7777";
+    message.textContent = "Please choose at least one table.";
+    return;
+}
 
 
     const submitButton =
