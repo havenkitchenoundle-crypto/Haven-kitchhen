@@ -2276,9 +2276,18 @@ setInterval(()=>{
   type="number"
   min="1"
   required
+  oninput="loadWalkInTableOptions()"
   style="width:100%;padding:12px;margin-bottom:15px;"
 >
-      
+      <label>Choose Table(s)</label>
+
+<select
+  id="walkInTableChoice"
+  required
+  style="width:100%;padding:12px;margin-bottom:15px;"
+>
+  <option value="">Enter guest count first</option>
+</select>
       <div style="display:flex;gap:10px;">
 
         <button
