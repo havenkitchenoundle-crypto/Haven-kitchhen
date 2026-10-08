@@ -2789,7 +2789,29 @@ if (options.length > 0) {
 
 }
 
+async function autoSeatWalkIn() {
+  const guests = Number(
+    document.getElementById("walkInGuests").value
+  );
 
+  const message = document.getElementById("walkInMessage");
+
+  if (!guests || guests < 1) {
+    message.textContent = "Please enter number of guests.";
+    return;
+  }
+
+  await loadWalkInTableOptions();
+
+  const choice = document.getElementById("walkInTableChoice");
+
+  if (!choice.value) {
+    message.textContent = "No suitable tables available.";
+    return;
+  }
+
+  await submitWalkIn();
+}
 async function submitWalkIn() {
 
     
