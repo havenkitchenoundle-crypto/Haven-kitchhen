@@ -615,7 +615,7 @@ onchange="renderBookings()">
 <button
   type="button"
   class="new-booking"
-  onclick="openWalkInModal(); loadWalkInTableOptions();"
+  onclick="openWalkInModal(); loadWalkInTableOptions();">
   + Walk In
 </button>
 <button
@@ -2824,7 +2824,7 @@ async function submitWalkIn() {
       );
 
 
-const choice = document.getElementById("walkInTableChoice").value;
+
 
 const choice =
   document.getElementById("walkInTableChoice").value;
@@ -2832,7 +2832,7 @@ const choice =
 const selectedTables = choice
   ? choice.split(",").map(Number)
   : selectedWalkInTables.map(Number);
-  : selectedWalkInTables.map(Number);;
+  
 
 
     const message =
