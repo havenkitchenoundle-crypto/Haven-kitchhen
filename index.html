@@ -1127,33 +1127,12 @@ async function getNearbyAvailableTimes(date, time, guests) {
             return;
         }
 
-        data.forEach(function(item) {
+data.forEach(function(item) {
     const time = item.available_time.substring(0, 5);
-
-    let leavingTime;
-
-    if (time === "21:00") {
-        leavingTime = "22:00";
-    } else {
-        const [hours, minutes] = time.split(":").map(Number);
-        const totalMinutes =
-            (hours * 60) +
-            minutes +
-            (guests <= 2 ? 120 : 150);
-
-        const leavingHours = Math.floor(totalMinutes / 60);
-        const leavingMinutes = totalMinutes % 60;
-
-        leavingTime =
-            String(leavingHours).padStart(2, "0") +
-            ":" +
-            String(leavingMinutes).padStart(2, "0");
-    }
 
     const option = document.createElement("option");
     option.value = time;
-    option.textContent =
-        `${time} Arrive — ${leavingTime} Leaving`;
+    option.textContent = time;
 
     timeSelect.appendChild(option);
 });
