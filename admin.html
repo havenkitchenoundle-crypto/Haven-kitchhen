@@ -2351,9 +2351,17 @@ document.getElementById("manualBookingForm").addEventListener("submit", async fu
 );
 
     if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(errorText);
-    }
+    const errorText = await response.text();
+    throw new Error(errorText);
+}
+
+const bookingSaved = await response.json();
+
+if (bookingSaved !== true) {
+    throw new Error(
+        "Booking could not be saved. Please check availability and try again."
+    );
+}
 
     message.style.color = "#7CFC98";
     message.textContent = "Booking saved successfully.";
