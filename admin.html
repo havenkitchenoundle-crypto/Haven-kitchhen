@@ -2810,7 +2810,22 @@ async function autoSeatWalkIn() {
     return;
   }
 
-  await loadWalkInTableOptions();
+  const choiceBeforeReload =
+  document.getElementById("walkInTableChoice").value;
+
+await loadWalkInTableOptions();
+
+const choiceAfterReload =
+  document.getElementById("walkInTableChoice");
+
+if (
+  choiceBeforeReload &&
+  [...choiceAfterReload.options].some(
+    option => option.value === choiceBeforeReload
+  )
+) {
+  choiceAfterReload.value = choiceBeforeReload;
+};
 
   const choice = document.getElementById("walkInTableChoice");
 
