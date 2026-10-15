@@ -871,88 +871,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
       Book a Table
     </h2>
 
-    <form
-      id="bookingForm"
-      class="booking-form"
-      onsubmit="confirmBooking(event)">
-
-      <input
-        id="name"
-        type="text"
-        placeholder="Your Name"
-        required
-      >
-
-
-      <input
-        id="phone"
-        type="tel"
-        placeholder="Phone Number"
-        required
-      >
-<input
-  id="email"
-  type="email"
-  placeholder="Email Address"
-  required
->
-<label for="date" class="booking-label">Select Date</label>
-<input
-    id="date"
-    type="date"
-    required
->
-
-<input
-        id="guests"
-        type="number"
-        min="1"
-        max="20"
-        placeholder="Number of Guests"
-        required
-      >
-      <select id="time" required>
-  <option value="">Select Time</option>
-  <option value="12:00">12:00</option>
-  <option value="12:30">12:30</option>
-  <option value="13:00">13:00</option>
-  <option value="13:30">13:30</option>
-  <option value="14:00">14:00</option>
-  <option value="14:30">14:30</option>
-  <option value="15:00">15:00</option>
-  <option value="15:30">15:30</option>
-  <option value="16:00">16:00</option>
-  <option value="16:30">16:30</option>
-  <option value="17:00">17:00</option>
-  <option value="17:30">17:30</option>
-  <option value="18:00">18:00</option>
-  <option value="18:30">18:30</option>
-  <option value="19:00">19:00</option>
-  <option value="19:30">19:30</option>
-  <option value="20:00">20:00</option>
-  <option value="20:30">20:30</option>
-  <option value="21:00">21:00</option>
-  <option value="21:30">21:30</option>
-  <option value="22:00">22:00</option>
-</select>
-        
-
-
-      
-
-
-      <textarea
-        id="notes"
-        placeholder="Special Request (optional)"
-        rows="4"></textarea>
-
-
-      <button type="submit">
-        CONFIRM BOOKING
-      </button>
-
-
-    </form>
+    <script type="text/javascript" src="https://www.opentable.co.uk/widget/reservation/loader?rid=695451&type=standard&theme=standard&color=1&dark=false&iframe=true&domain=couk&lang=en-GB&newtab=false&ot_source=Restaurant%20website&cfe=true"></script>
 
   </div>
 
@@ -1187,64 +1106,6 @@ if (
   (bookingDay === 5 || bookingDay === 6)
 ) {
   document.getElementById("havenPopup").style.display = "flex";
-  return;
-}
-  try {
-    const booked = await createBookingSafe(
-      name,
-      phone,
-      email,
-      date,
-      time,
-      guests,
-      notes
-    );
-
-    if (!booked) {
-      
-  const nearbyTimes = await getNearbyAvailableTimes(date, time, guests);
-
-  const times = nearbyTimes
-    .map(item => item.available_time.substring(0, 5))
-    .join(", ");
-
-  let message =
-    "Sorry, we don't have availability at " + time +
-    " for " + guests + " guest(s).\n\n";
-
-  if (times) {
-    message +=
-      "Available nearby times:\n" +
-      times +
-      "\n\nPlease choose one of the available times above.";
-  } else {
-    message +=
-      "Unfortunately, we don't have another nearby time available.";
-  }
-
-  message +=
-    "\n\nPlease contact us and we'll be happy to help find a suitable table for you.\n" +
-    "Tel: 01832 851123";
-
-  alert(message);
-return;
-}
-
-} catch (error) {
-    console.error("Booking error:", error);
-    alert(error.message);
-    return;
-  }
-
-  alert(
-    "Your booking has been confirmed!\n\n" +
-    "Date: " + date + "\n" +
-    "Time: " + time + "\n" +
-    "Guests: " + guests
-  );
-
-  document.getElementById("bookingForm").reset();
-}
 
 </script>
 <!-- HAVEN KITCHEN POPUP -->
@@ -1308,18 +1169,6 @@ return;
         </button>
     </div>
 </div>
-  <script>
-  const bookingDate = document.getElementById("date");
-
-  if (bookingDate) {
-    const today = new Date();
-    const localToday =
-      today.getFullYear() + "-" +
-      String(today.getMonth() + 1).padStart(2, "0") + "-" +
-      String(today.getDate()).padStart(2, "0");
-
-    bookingDate.min = localToday;
-  }
-  </script>
+  
 </body>
 </html>
