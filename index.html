@@ -529,6 +529,94 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   opacity: 1;
   cursor: pointer;
 }
+/* NEW TAKEAWAY BANNER */
+
+.hk-takeaway {
+  padding: 100px 20px;
+  text-align: center;
+  background: linear-gradient(
+    rgba(10, 22, 16, 0.85),
+    rgba(10, 22, 16, 0.92)
+  ), url("images/takeaway-banner.jpg")
+     center / cover no-repeat;
+  background-color: #101b14;
+  color: #ffffff;
+}
+
+.hk-takeaway-inner {
+  max-width: 750px;
+  margin: 0 auto;
+}
+
+.hk-takeaway-label {
+  color: #c99a45;
+  font-size: 13px;
+  letter-spacing: 3px;
+  font-weight: bold;
+}
+
+.hk-takeaway h2 {
+  color: #ffffff;
+  font-family: Georgia, serif;
+  font-size: clamp(32px, 5vw, 54px);
+  line-height: 1.2;
+  margin: 25px 0;
+}
+
+.hk-takeaway-description {
+  font-size: 18px;
+  line-height: 1.8;
+  color: #f4eee2;
+  margin-bottom: 25px;
+}
+
+.hk-takeaway-offer {
+  display: table;
+  margin: 25px auto;
+  padding: 12px 25px;
+  border: 1px solid #c99a45;
+  color: #e8c98f;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.hk-takeaway-button {
+  display: inline-block;
+  background: #c99a45;
+  color: #101b14;
+  padding: 18px 35px;
+  border-radius: 5px;
+  font-weight: bold;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.hk-takeaway-button:hover {
+  background: #e8c98f;
+  transform: translateY(-3px);
+}
+
+.hk-takeaway-note {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #e8dfd2;
+}
+
+@media (max-width: 600px) {
+  .hk-takeaway {
+    padding: 70px 20px;
+  }
+
+  .hk-takeaway-description {
+    font-size: 16px;
+  }
+
+  .hk-takeaway-button {
+    width: 100%;
+    max-width: 350px;
+  }
+}
+
 </style>
 </head>
 
@@ -669,8 +757,88 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 </section>
 
+<!-- NEW TAKEAWAY BANNER -->
+<section class="hk-takeaway">
+  <div class="hk-takeaway-inner">
+
+    <span class="hk-takeaway-label">
+      HAVEN KITCHEN · OUNDLE
+    </span>
+
+    <h2>
+      OUR NEW TAKEAWAY<br>
+      MENU IS HERE!
+    </h2>
+
+    <p class="hk-takeaway-description">
+      Your favourite Turkish flavours,
+      freshly prepared and ready to enjoy
+      at home. Explore our new menu today!
+    </p>
+
+    <div class="hk-takeaway-offer">
+      15% OFF COLLECTION ORDERS
+    </div>
+
+    <a
+      href="https://www.order-havenkitchen.co.uk/"
+      class="hk-takeaway-button"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      VIEW MENU & ORDER NOW →
+    </a>
+
+    <p class="hk-takeaway-note">
+      Collection & Home Delivery Available
+    </p>
+
+  </div>
+</section>
+<!-- END TAKEAWAY BANNER -->
+
 
 <!-- ABOUT -->
+
+<!-- NEW TAKEAWAY BANNER -->
+<section class="hk-takeaway">
+  <div class="hk-takeaway-inner">
+
+    <span class="hk-takeaway-label">
+      HAVEN KITCHEN · OUNDLE
+    </span>
+
+    <h2>
+      OUR NEW TAKEAWAY<br>
+      MENU IS HERE!
+    </h2>
+
+    <p class="hk-takeaway-description">
+      Your favourite Turkish flavours,
+      freshly prepared and ready to enjoy
+      at home. Explore our new menu today!
+    </p>
+
+    <div class="hk-takeaway-offer">
+      15% OFF COLLECTION ORDERS
+    </div>
+
+    <a
+      href="https://www.order-havenkitchen.co.uk/"
+      class="hk-takeaway-button"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      VIEW MENU & ORDER NOW →
+    </a>
+
+    <p class="hk-takeaway-note">
+      Collection & Home Delivery Available
+    </p>
+
+  </div>
+</section>
+<!-- END TAKEAWAY BANNER -->
 
 <section id="about" class="dark-section">
 
