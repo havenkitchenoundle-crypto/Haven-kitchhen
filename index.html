@@ -617,6 +617,30 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   }
 }
 
+/* ORDER TAKEAWAY BUTTON */
+.order-online-nav {
+  background: #c99a45;
+  color: #101b14;
+  border: 1px solid #c99a45;
+}
+
+.order-online-nav:hover {
+  background: #e8c98f;
+  color: #101b14;
+}
+
+@media (max-width: 768px) {
+  header nav {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  header nav .reserve {
+    font-size: 11px;
+    padding: 10px 12px;
+  }
+}
+
 </style>
 </head>
 
@@ -688,6 +712,15 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     
 <a href="#booking" class="reserve">
   BOOK A TABLE
+</a>
+
+<a
+  href="https://www.order-havenkitchen.co.uk/"
+  class="reserve order-online-nav"
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  ORDER TAKEAWAY
 </a>
 
 
