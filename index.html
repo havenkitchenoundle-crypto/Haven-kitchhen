@@ -1088,6 +1088,36 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     letter-spacing: 1px;
   }
 }
+  header nav {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    justify-content: center;
+    align-items: center;
+    gap: 8px !important;
+}
+
+header nav .reserve,
+header nav .order-online-nav {
+    background: #40E0D0 !important;
+    color: #000000 !important;
+    border: 1px solid #40E0D0 !important;
+    white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+    header nav {
+        width: 100%;
+        gap: 6px !important;
+    }
+
+    header nav > a,
+    header nav .menu-toggle {
+        font-size: 10px !important;
+        letter-spacing: 0 !important;
+        padding: 10px 5px !important;
+        white-space: nowrap;
+    }
+}
 </style>
 
 <section id="reviews" class="hk-reviews">
