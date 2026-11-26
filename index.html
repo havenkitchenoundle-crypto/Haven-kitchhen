@@ -844,25 +844,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 <!-- ABOUT -->
 
 
-<section id="about" class="dark-section">
 
-  <div class="eyebrow">
-    LET'S MEET AT THE HAVEN KITCHEN
-  </div>
-
-<h2 class="section-title">
-  HAVEN <span class="gold">KITCHEN</span>
-</h2>
-
-<p class="subtitle">
-  Where Every Bite is an Experience
-</p>
-
-  <p class="about-text">
-    Discover delicious food and a warm welcome at Haven Kitchen. A place to enjoy every bite. memorable.
-  </p>
-
-</section>
 
 
 <!-- MENUS -->
@@ -957,6 +939,305 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 </section>
 
+
+<!-- CUSTOMER REVIEWS START -->
+
+<style>
+.hk-reviews {
+  background: #0b0b0b;
+  padding: 65px 20px;
+  text-align: center;
+  color: #f5f0e8;
+}
+
+.hk-review-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  max-width: 1200px;
+  margin: 35px auto;
+}
+
+.hk-review-card {
+  background: #151515;
+  border: 1px solid #665334;
+  border-radius: 8px;
+  padding: 25px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.hk-stars {
+  color: #c9a35c;
+  font-size: 23px;
+  letter-spacing: 3px;
+}
+
+.hk-review-card p {
+  color: #eee9df;
+  font-size: 16px;
+  line-height: 1.8;
+  margin: 18px 0;
+  flex: 1;
+}
+
+.hk-review-person {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-top: 1px solid #443622;
+  padding-top: 18px;
+}
+
+.hk-avatar {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #352b1c;
+  color: #c9a35c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 19px;
+}
+
+.hk-review-name {
+  color: #c9a35c;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.hk-review-source {
+  color: #aaa;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.hk-google {
+  font-size: 17px;
+  font-weight: bold;
+  color: #4285F4;
+  margin-right: 5px;
+}
+
+.hk-booking {
+  margin-top: 50px;
+}
+
+.hk-booking h3 {
+  font-family: Georgia, serif;
+  font-size: clamp(26px, 4vw, 38px);
+  font-weight: normal;
+  color: #f5f0e8;
+  margin-bottom: 15px;
+}
+
+.hk-booking p {
+  color: #ccc;
+  font-size: 16px;
+}
+
+.hk-book-button {
+  display: inline-block;
+  background: #c9a35c;
+  color: #0b0b0b;
+  padding: 17px 38px;
+  margin-top: 22px;
+  text-decoration: none;
+  letter-spacing: 2px;
+  font-weight: bold;
+  border-radius: 4px;
+  transition: 0.3s;
+}
+
+.hk-book-button:hover {
+  background: #e2c38a;
+  color: #0b0b0b;
+}
+
+.hk-swipe {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .hk-reviews {
+    padding: 50px 18px;
+  }
+
+  .hk-review-grid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 15px;
+    scrollbar-color: #c9a35c #151515;
+    scrollbar-width: thin;
+  }
+
+  .hk-review-card {
+    flex: 0 0 88%;
+    scroll-snap-align: center;
+  }
+
+  .hk-swipe {
+    display: block;
+    color: #c9a35c;
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+}
+</style>
+
+<section id="reviews" class="hk-reviews">
+
+  <div class="eyebrow">
+    CUSTOMER REVIEWS
+  </div>
+
+  <h2 class="section-title">
+    What Our <span class="gold">Guests Say</span>
+  </h2>
+
+  <div class="hk-review-grid">
+
+    <!-- REVIEW 1 -->
+
+    <article class="hk-review-card">
+      <div class="hk-stars" aria-label="5 out of 5 stars">★★★★★</div>
+
+      <p>“Well what a surprise. Sunday afternoon visit and my goodness what absolutely delicious food. Fresh, fantastic portions, so clean and welcoming. Absolutely going back again soon.”</p>
+
+      <div class="hk-review-person">
+        <div class="hk-avatar">H</div>
+        <div>
+          <div class="hk-review-name">Helen Hyde</div>
+          <div class="hk-review-source">Local Guide</div>
+          <div class="hk-review-source">
+            <span class="hk-google">G</span> Google Review
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- REVIEW 2 -->
+
+    <article class="hk-review-card">
+      <div class="hk-stars" aria-label="5 out of 5 stars">★★★★★</div>
+
+      <p>“Excellent food and exceptional service. Such a good value lunch. Very much recommend. Best restaurant in Oundle.”</p>
+
+      <div class="hk-review-person">
+        <div class="hk-avatar">R</div>
+        <div>
+          <div class="hk-review-name">Rachel McBurney</div>
+          <div class="hk-review-source">Local Guide</div>
+          <div class="hk-review-source">
+            <span class="hk-google">G</span> Google Review
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- REVIEW 3 -->
+
+    <article class="hk-review-card">
+      <div class="hk-stars" aria-label="5 out of 5 stars">★★★★★</div>
+
+      <p>“This is my new favorite spot in Oundle. The atmosphere is fabulous, you feel like you have left Oundle and entered Istanbul. The food was top notch. The meat was cooked to perfection. …”</p>
+
+      <div class="hk-review-person">
+        <div class="hk-avatar">M</div>
+        <div>
+          <div class="hk-review-name">Monica Karaky</div>
+          <div class="hk-review-source">
+            <span class="hk-google">G</span> Google Review
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- REVIEW 4 -->
+
+    <article class="hk-review-card">
+      <div class="hk-stars" aria-label="5 out of 5 stars">★★★★★</div>
+
+      <p>“Oundle has a new best restaurant”</p>
+
+      <div class="hk-review-person">
+        <div class="hk-avatar">S</div>
+        <div>
+          <div class="hk-review-name">Scott M</div>
+          <div class="hk-review-source">
+            <span class="hk-google">G</span> Google Review
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- REVIEW 5 -->
+
+    <article class="hk-review-card">
+      <div class="hk-stars" aria-label="5 out of 5 stars">★★★★★</div>
+
+      <p>“Absolutely fantastic meal with my bestie. Mixed meze hot starter was incredible. Freshly made, well seasoned, most tender lamb. Service was impeccable. Highly recommend this place. Will be back!”</p>
+
+      <div class="hk-review-person">
+        <div class="hk-avatar">R</div>
+        <div>
+          <div class="hk-review-name">Ruth Challenor</div>
+          <div class="hk-review-source">Local Guide</div>
+          <div class="hk-review-source">
+            <span class="hk-google">G</span> Google Review
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- REVIEW 6 -->
+
+    <article class="hk-review-card">
+      <div class="hk-stars" aria-label="5 out of 5 stars">★★★★★</div>
+
+      <p>“… Staff attentive. Really lovely setting and the background music had us singing a long. We will be back the lunch is an absolute bargain. My son also had a Lycee Juice it was so tasty.”</p>
+
+      <div class="hk-review-person">
+        <div class="hk-avatar">H</div>
+        <div>
+          <div class="hk-review-name">H Dav</div>
+          <div class="hk-review-source">Local Guide</div>
+          <div class="hk-review-source">
+            <span class="hk-google">G</span> Google Review
+          </div>
+        </div>
+      </div>
+    </article>
+
+  </div>
+
+  <div class="hk-swipe">
+    ← SWIPE TO EXPLORE MORE REVIEWS →
+  </div>
+
+  <div class="hk-booking">
+
+    <h3>
+      Come and Experience
+      <span class="gold">Haven Kitchen</span>
+    </h3>
+
+    <p>We look forward to welcoming you.</p>
+
+    <a href="#contact" class="hk-book-button">
+      BOOK A TABLE
+    </a>
+
+  </div>
+
+</section>
+
+<!-- CUSTOMER REVIEWS END -->
 
 <!-- CONTACT -->
 
